@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="Specialist_Dashboard.Controls.RollsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             mc:Ignorable="d" 
+             d:DesignHeight="260" d:DesignWidth="553">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="WhiteSmoke">
+        <DatePicker x:Name="fromDTPick" HorizontalAlignment="Right" Margin="0,5,130,0" VerticalAlignment="Top" TabIndex="2" IsTabStop="True"/>
+        <DatePicker x:Name="toDTPick" HorizontalAlignment="Right" Margin="0,5,23,0" VerticalAlignment="Top" IsTabStop="True" TabIndex="3"/>
+        <ListView x:Name="rollsLv" HorizontalAlignment="Stretch" Margin="5,41,10,5" VerticalAlignment="Stretch" MouseDoubleClick="rollsLv_MouseDoubleClick_1" GridViewColumnHeader.Click="GridViewColumn_Click_1" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="Auto" Header="Roll Name" DisplayMemberBinding="{Binding RollName}" />
+                    <GridViewColumn Width="Auto" Header="State" DisplayMemberBinding="{Binding State}"/>
+                    <GridViewColumn Width="Auto" Header="Current" DisplayMemberBinding="{Binding Step}" />
+                    <GridViewColumn Width="Auto" Header="Last Update" DisplayMemberBinding="{Binding LastUpdate}" />
+
+                    <!--<GridViewColumn Width="70" Header="History" DisplayMemberBinding="{Binding HistoryStep}"/>-->
+                    <!--use percentages-->
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <TextBlock Name="emptyTxtBlck" Text="No Results" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15, 85"/>
+        <TextBox x:Name="rollRollnameTxt" HorizontalAlignment="Right" Height="23" Margin="0,5,237,0" Controls:TextboxHelper.Watermark="Rollname" Controls:TextboxHelper.ClearTextButton="True" VerticalAlignment="Top" Width="170" RenderTransformOrigin="0.578,2.346" TextElement.Foreground="DimGray" TextAlignment="Left" TabIndex="1"/>
+        <ComboBox x:Name="rollStepComboBox" HorizontalAlignment="Right" Margin="0,5,412,0" VerticalAlignment="Top" Width="126" TabIndex="2" IsEditable="True" Height="23" Controls:TextboxHelper.Watermark="Step" TextElement.Foreground="DimGray">
+            <ListBoxItem Content="Scan" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="MekelFraming" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="ImageQA" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="ImageQE" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="GridlineQualityAudit" TextElement.Foreground="DimGray"/>
+        </ComboBox>
+        <Button Name="ShowDetailsBtn" HorizontalAlignment="Right" VerticalAlignment="Top" Height="36" IsEnabled="False" Width="18" Click="ShowDetailsBtn_Click_1">
+            <Image Source="/images/New_rArrow.png"></Image>
+        </Button>
+        <Controls:TransitioningContentControl x:Name="rollTabCtrlCC" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Hidden" Background="Gray" Transition="LeftTransition" />
+        <Button Name="BackBtn" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,35,10,0" Height="37" Width="37" Visibility="Hidden" Click="BackBtn_Click_2" RenderTransformOrigin="0.432,0.919" />
+    </Grid>
+</UserControl>

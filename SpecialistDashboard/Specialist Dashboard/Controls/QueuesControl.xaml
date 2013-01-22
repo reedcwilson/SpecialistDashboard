@@ -1,0 +1,85 @@
+﻿<UserControl x:Class="Specialist_Dashboard.QueuesControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             mc:Ignorable="d" 
+             d:DesignHeight="260" d:DesignWidth="553">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Name="queuesLvGrid" Background="WhiteSmoke">
+        <ListView x:Name="queuesLv" Margin="5,61,5,5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MouseDoubleClick="rollsLv_MouseDoubleClick_1" GridViewColumnHeader.Click="GridViewColumn_Click_1" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="Auto" Header="Project" DisplayMemberBinding="{Binding ProjectId}" />
+                    <GridViewColumn Width="Auto" Header="Roll Name" DisplayMemberBinding="{Binding RollName}" />
+                    <GridViewColumn Width="Auto" Header="Step" DisplayMemberBinding="{Binding Step}" />
+                    <GridViewColumn Width="Auto" Header="State" DisplayMemberBinding="{Binding State}" />
+                    <GridViewColumn Width="Auto" Header="!" DisplayMemberBinding="{Binding Priority}" />
+                    <GridViewColumn Width="Auto" Header="User" DisplayMemberBinding="{Binding Spec.Username}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <TextBlock Name="emptyTxtBlck" Text="No Results" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15, 85"/>
+        <TextBox x:Name="queueRollTxt" Controls:TextboxHelper.ClearTextButton="True" Controls:TextboxHelper.Watermark="Rollname" HorizontalAlignment="Right" Height="23" Margin="0,33,18,0" TextAlignment="Left" TextElement.Foreground="DimGray" VerticalAlignment="Top" Width="190" TabIndex="6"/>
+        <TextBox x:Name="queueProjectTxt" Controls:TextboxHelper.ClearTextButton="True" Controls:TextboxHelper.Watermark="Project" HorizontalAlignment="Right" Height="23" Margin="0,5,18,0" TextAlignment="Left" TextElement.Foreground="DimGray" VerticalAlignment="Top" Width="190" TabIndex="5"/>
+        <Controls:TransitioningContentControl x:Name="transitioning" Width="85" Height="40" Transition="LeftReplaceTransition" Margin="29,126,421,97"></Controls:TransitioningContentControl>
+        <ComboBox x:Name="priorityComboBox" Controls:TextboxHelper.Watermark="Priority" Margin="0,5,380,0" VerticalAlignment="Top" Width="160" HorizontalAlignment="Right" TabIndex="1" IsEditable="True" Height="23" TextElement.Foreground="DimGray">
+            <ComboBoxItem Content="1" TextElement.Foreground="DimGray"/>
+            <ComboBoxItem Content="2" TextElement.Foreground="DimGray"/>
+            <ComboBoxItem Content="3" TextElement.Foreground="DimGray"/>
+            <ComboBoxItem Content="4" TextElement.Foreground="DimGray"/>
+            <ComboBoxItem Content="5" TextElement.Foreground="DimGray"/>
+            <ComboBoxItem Content="6" TextElement.Foreground="DimGray"/>
+            <ComboBoxItem Content="7" TextElement.Foreground="DimGray"/>
+            <ComboBoxItem Content="8" TextElement.Foreground="DimGray"/>
+            <ComboBoxItem Content="9" TextElement.Foreground="DimGray"/>
+            <ComboBoxItem Content="10" TextElement.Foreground="DimGray"/>
+            <ComboBoxItem Content="11" TextElement.Foreground="DimGray"/>
+            <ComboBoxItem Content="12" TextElement.Foreground="DimGray"/>
+        </ComboBox>
+        <ComboBox x:Name="stepComboBox" Controls:TextboxHelper.Watermark="Step" HorizontalAlignment="Right" Margin="0,5,213,0" VerticalAlignment="Top" Width="162" TabIndex="2" IsEditable="True" Height="23" TextElement.Foreground="DimGray">
+            <ListBoxItem Content="Scan" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="MekelFraming" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="MekelExtracting" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="ImageProcessing" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="ImageQA" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="ImageQE" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="FileCopying" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="ImageConverting" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="BatchExporting" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="GridlineQualityAudit" TextElement.Foreground="DimGray"/>
+        </ComboBox>
+        <ComboBox x:Name="userComboBox" Controls:TextboxHelper.Watermark="User" Margin="0,33,380,0" VerticalAlignment="Top" Width="160" HorizontalAlignment="Right" TabIndex="3" IsEditable="True" Height="23" ItemsSource="{Binding SpecialistName}" TextElement.Foreground="DimGray">
+        </ComboBox>
+        <ComboBox x:Name="stateComboBox" Controls:TextboxHelper.Watermark="State" HorizontalAlignment="Right" Margin="0,33,213,0" VerticalAlignment="Top" Width="162" TabIndex="4" IsEditable="True" Height="23" TextElement.Foreground="DimGray">
+            <ListBoxItem Content="InProcess" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="Ready" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="Suspended" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="Error" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="Reserved" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="OnHold" TextElement.Foreground="DimGray"/>
+        </ComboBox>
+        <Button Name="ShowDetailsBtn" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,0,0" Height="54" IsEnabled="False" Width="18" Click="ShowDetailsBtn_Click_1">
+            <Button.Content>
+                <StackPanel>
+                    <Image Source="/images/New_rArrow.png"></Image>
+                </StackPanel>
+            </Button.Content>
+        </Button>
+        <Controls:TransitioningContentControl x:Name="rollTabCtrlCC" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Hidden" Background="Gray" Transition="LeftTransition" />
+        <Button Name="BackBtn" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,35,10,0" Height="37" Width="37" Visibility="Hidden" Click="BackBtn_Click_2" />
+    </Grid>
+</UserControl>

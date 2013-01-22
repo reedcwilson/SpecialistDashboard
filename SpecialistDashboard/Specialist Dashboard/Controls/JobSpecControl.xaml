@@ -1,0 +1,156 @@
+﻿<UserControl x:Class="Specialist_Dashboard.JobSpecControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             mc:Ignorable="d" 
+             d:DesignHeight="235" d:DesignWidth="553" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsTabStop="False">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid x:Name="JobSpecGrid" Background="WhiteSmoke">
+        
+        <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 0, 0, 0">
+            <TabItem Header="History">
+                <Grid>
+                    <ListView Name="historyLv" Margin="0,0,284,0" SelectionChanged="historyLv_Selected_1" GridViewColumnHeader.Click="GridViewColumn_Click_1" >
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Date" Width="135" DisplayMemberBinding="{Binding Date}"/>
+                                <GridViewColumn Header="Step" Width="120" DisplayMemberBinding="{Binding Step}"/>
+                                <!--<GridViewColumn Header="User" Width="85" DisplayMemberBinding="{Binding Spec.Username}"/>
+                                <GridViewColumn Header="Message" Width="300" DisplayMemberBinding="{Binding Message}"/>-->
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <RichTextBox Name="MessageRichTxt" HorizontalAlignment="Right" IsReadOnly="True" Margin="0,21,10,0" VerticalAlignment="Stretch" Width="269">
+                        <FlowDocument >
+                        </FlowDocument>
+                    </RichTextBox>
+                    <Label Name="HistoryUserLbl" Content="User" HorizontalAlignment="Right" Margin="0,-5,10,0" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Notes">
+                <Grid>
+                    <ListView Name="notesLv" Margin="0,0,284,0" SelectionChanged="notesLv_SelectionChanged_1" GridViewColumnHeader.Click="GridViewColumn_Click_2">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Date" Width="135" DisplayMemberBinding="{Binding Date}"/>
+                                <GridViewColumn Header="Step" Width="120" DisplayMemberBinding="{Binding Step}"/>
+                                <!--<GridViewColumn Header="User" Width="85" DisplayMemberBinding="{Binding Spec.Username}"/>
+                                <GridViewColumn Header="Note" Width="300" DisplayMemberBinding="{Binding NoteMessage}"/>-->
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <RichTextBox x:Name="NoteRichTxt" HorizontalAlignment="Right" Margin="0,21,76,0" VerticalAlignment="Stretch" Width="203">
+                        <FlowDocument />
+                    </RichTextBox>
+                    <Label x:Name="NotesUserLbl" Content="User" HorizontalAlignment="Right" Margin="0,-5,76,0" VerticalAlignment="Top"/>
+                    <Button Content="New" HorizontalAlignment="Right" Margin="0,0,10,37" VerticalAlignment="Bottom" IsEnabled="False" Width="61"/>
+                    <Button Content="Save" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Bottom" IsEnabled="False" Width="61"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Images">
+                <Grid>
+                    <Label Content="Root Images:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="373,5,0,0"/>
+                    <Label Content="#" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="485,5,0,0"/>
+                    <Label Content="Processed Images:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="373,31,0,0"/>
+                    <Label Content="#" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="485,31,0,0"/>
+                    <Label Content="Indexing Images:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="373,57,0,0"/>
+                    <Label Content="#" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="485,57,0,0"/>
+                    <ListView Name="imgNotesLv" Margin="0,0,363,0" SelectionChanged="ImgNotesLv_SelectionChanged_1" GridViewColumnHeader.Click="GridViewColumn_Click_3">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Image" Width="Auto" DisplayMemberBinding="{Binding ImageNum}"/>
+                                <GridViewColumn Header="User" Width="Auto" DisplayMemberBinding="{Binding Spec.Username}"/>
+                                <!--<GridViewColumn Header="User" Width="85" DisplayMemberBinding="{Binding Spec.Username}"/>
+                                <GridViewColumn Header="Note" Width="300" DisplayMemberBinding="{Binding NoteMessage}"/>-->
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <RichTextBox x:Name="ImgNoteMessageRichTxt" HorizontalAlignment="Right" Margin="0,21,175,0" VerticalAlignment="Stretch" Width="183" IsReadOnly="True">
+                        <FlowDocument />
+                    </RichTextBox>
+                    <Label x:Name="ImgNoteUpdateTimeLbl" Content="Update Time" HorizontalAlignment="Right" Margin="0,-5,175,0" VerticalAlignment="Top"/>
+                    <Button Name="textGenerate" Content="See Text" HorizontalAlignment="Right" Margin="0,131,10,0" VerticalAlignment="Top" Width="89" Click="textGenerate_Click_1"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Details">
+                <Grid>
+                    <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="114" Margin="0,62,0,0" Stroke="DimGray" VerticalAlignment="Top" Width="533"/>
+                    <Label Name="DetailsProjectLbl" Content="Project" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" />
+                    <Label Name="DetailsRollnameLbl" Content="Rollname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="226,0,0,0" />
+                    <Label Content="Root Folder" HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top"/>
+                    <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="120,72,0,0">
+                        <Hyperlink Click="RootFolderHLink_Click_1" Name="RootFolderHLink">Root Folder</Hyperlink>
+                    </TextBlock>
+                    <Label Content="Processed Images" HorizontalAlignment="Left" Margin="10,93,0,0" VerticalAlignment="Top"/>
+                    <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="120,98,0,0">
+                        <Hyperlink Click="ImgProcHLink_Click_1" Name="ImgProcHLink">Image Processed Images</Hyperlink>
+                    </TextBlock>
+                    <Label Content="Indexing Images" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top"/>
+                    <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="120,124,0,0">
+                        <Hyperlink Click="IdxImgHLink_Click_1" Name="IdxImgHLink">Indexing Images</Hyperlink>
+                    </TextBlock>
+                    <Label Content="Site Suite" HorizontalAlignment="Left" Margin="10,145,0,0" VerticalAlignment="Top"/>
+                    <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="120,150,0,0">
+                        <Hyperlink Click="SiteSuiteHLink_Click_1" Name="SiteSuiteHLink">Site Suite</Hyperlink>
+                    </TextBlock>
+                    <TextBox Name="DetailsProjectTxt" IsReadOnly="True" HorizontalAlignment="Left" Height="18" Margin="62,0,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="159"/>
+                    <TextBox Name="DetailsRollnameTxt" IsReadOnly="True" HorizontalAlignment="Left" Height="18" Margin="291,0,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="242"/>
+                    <Label x:Name="DetailsStepLbl" Content="Step" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,31,0,0" />
+                    <Label x:Name="StepLbl" Content="Current Step" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,31,0,0" />
+                    <Label x:Name="DetailsStateLbl" Content="State" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="226,31,0,0" />
+                    <Label x:Name="StateLbl" Content="Current State" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="291,31,0,0" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="QE">
+                <Grid Margin="0,0,3,0">
+                    <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="325,154,0,0">
+                        <Hyperlink TextDecorations="none" Name="JobSpecOpenHLink" Click="JobSpecOpenHLink_Click_1">Open</Hyperlink>
+                    </TextBlock>
+                    <Controls:ToggleSwitch x:Name="aggFactorTS" Header="Aggressive Factor" VerticalAlignment="Top" HorizontalAlignment="Left" Width="156" Height="60" Margin="0,55,0,0" Click="aggFactorTS_Click_1"/>
+                    <Controls:ToggleSwitch x:Name="autoCropTS" Header="Auto Crop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="156" Height="60" Click="autoCropTS_Click_1" Margin="0,-5,0,0"/>
+                    <ComboBox x:Name="deskewComboBox" Margin="98,147,0,0" VerticalAlignment="Top" Width="118" HorizontalAlignment="Left" IsEditable="True" Height="23" TextElement.Foreground="DimGray">
+                        <ComboBoxItem Content="1" TextElement.Foreground="DimGray"/>
+                        <ComboBoxItem Content="2" TextElement.Foreground="DimGray"/>
+                        <ComboBoxItem Content="3" TextElement.Foreground="DimGray"/>
+                        <ComboBoxItem Content="4" TextElement.Foreground="DimGray"/>
+                        <ComboBoxItem Content="5" TextElement.Foreground="DimGray"/>
+                        <ComboBoxItem Content="6" TextElement.Foreground="DimGray"/>
+                        <ComboBoxItem Content="7" TextElement.Foreground="DimGray"/>
+                        <ComboBoxItem Content="8" TextElement.Foreground="DimGray"/>
+                        <ComboBoxItem Content="9" TextElement.Foreground="DimGray"/>
+                        <ComboBoxItem Content="10" TextElement.Foreground="DimGray"/>
+                        <ComboBoxItem Content="11" TextElement.Foreground="DimGray"/>
+                        <ComboBoxItem Content="12" TextElement.Foreground="DimGray"/>
+                    </ComboBox>
+                    <Button x:Name="allJobSpecsBtn" Content="All Job Specs" Margin="239,55,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="allJobSpecsBtn_Click_1"/>
+                    <Button x:Name="projectSpecBtn" Content="Project Spec" Margin="239,18,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="118" Click="projectSpecBtn_Click_1" />
+                    <Label x:Name="qElinksLbl" Content="Links" HorizontalAlignment="Left" Margin="399,10,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Medium" TextElement.Foreground="DimGray" RenderTransformOrigin="0.213,-1.806" />
+                    <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="112" Margin="399,41,0,0" Stroke="DimGray" VerticalAlignment="Top" Width="124"/>
+                    <Label x:Name="projectChangesLinkLbl" Content="Project Changes" HorizontalAlignment="Left" Margin="399,46,0,0" VerticalAlignment="Top" TextElement.Foreground="DarkSlateGray" MouseEnter="LinkLbl_MouseEnter" MouseLeave="LinkLbl_MouseLeave_1" MouseLeftButtonUp="LinkLbl_MouseLeftButtonUp_1"/>
+                    <Label x:Name="qeTrainingLinkLbl" Content="QE Training" HorizontalAlignment="Left" Margin="399,72,0,0" VerticalAlignment="Top" TextElement.Foreground="DarkSlateGray" MouseEnter="LinkLbl_MouseEnter" MouseLeave="LinkLbl_MouseLeave_1" MouseLeftButtonUp="LinkLbl_MouseLeftButtonUp_1" />
+                    <Label x:Name="projectDefectsLinkLbl" Content="Project Defects" HorizontalAlignment="Left" Margin="399,98,0,0" VerticalAlignment="Top" TextElement.Foreground="DarkSlateGray" MouseEnter="LinkLbl_MouseEnter" MouseLeave="LinkLbl_MouseLeave_1" MouseLeftButtonUp="LinkLbl_MouseLeftButtonUp_1"/>
+                    <Label x:Name="defectLogLinkLbl" Content="Defect Log" HorizontalAlignment="Left" Margin="399,122,0,0" VerticalAlignment="Top" TextElement.Foreground="DarkSlateGray" MouseEnter="LinkLbl_MouseEnter" MouseLeave="LinkLbl_MouseLeave_1" MouseLeftButtonUp="LinkLbl_MouseLeftButtonUp_1"/>
+                    <TextBox x:Name="cropPaddingTxt" Controls:TextboxHelper.ClearTextButton="True" HorizontalAlignment="Left" Height="23" Margin="98,119,0,0" TextAlignment="Left" TextElement.Foreground="DimGray" VerticalAlignment="Top" Width="118" GotMouseCapture ="HighlightText_GotMouseCapture" GotKeyboardFocus="HighlightText_GotKeyboardFocus" LostFocus="TextBox_LostFocus_1" TabIndex="5"/>
+                    <Button x:Name="JobSpecBtn" Content="Job Spec" Margin="239,122,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="118" Click="JobSpecBtn_Click_1" />
+                    <Label HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Content="Crop Padding"/>
+                    <Label HorizontalAlignment="Left" Margin="10,146,0,0" VerticalAlignment="Top" Content="Deskew Angle"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
