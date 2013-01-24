@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace Specialist_Dashboard
 {
@@ -38,7 +39,9 @@ namespace Specialist_Dashboard
 
 
             RollsTabQueuesControl = new QueuesControl(SpecNames);
+            RollsTabQueuesControl.QueuesRolls = new List<Roll>(); 
             RollsTabRollsControl = new Controls.RollsControl();
+            RollsTabRollsControl.Rolls = new List<Roll>();
             rollsDisplay();
 
             this.BackgroundWorker = new BackgroundWorker();
@@ -51,29 +54,171 @@ namespace Specialist_Dashboard
         void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var data_context = new DataContext("epdb01", "JWF_Live");
-            var rollsReader = new QueuesRollsReader(data_context);
-            
-            var args = (GetRollsArgument) e.Argument;
+            var args = (GetRollsArgument)e.Argument;
+            if (args.Tab == 0 && !args.ToggleChecked)
+            {
+                var rollsReader = new QueuesRollsReader(data_context);
+                DoWorkForQueuesRolls(e, rollsReader); 
+            }
+            else if (args.Tab == 0 && args.ToggleChecked)
+            {
+                var rollsReader = new SpecialistRollsReader(data_context);
+                DoWorkForSpecialistRolls(e, rollsReader);
+            }
+            else if (args.Tab == 1)
+            {
+                var numbersReader = new DailyNumbersReader();
+                DoWorkForNumbers(e, numbersReader);
+            }
+        }
 
-            RollsTabQueuesControl.QueuesRolls = rollsReader.GetRolls(
+        private int _rollBatchSizeQueue = 200;
+        private int _rollBatchSizeRolls = 600;
+        void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (tabControl.SelectedIndex == 0 && Convert.ToBoolean(!rollsToggleBtn.IsChecked))
+            {
+                QueuesRollsThreadDisplay(e);
+            }
+            else if (tabControl.SelectedIndex == 0 && Convert.ToBoolean(rollsToggleBtn.IsChecked))
+            {
+                SpecialistRollsThreadDisplay(e);
+            }
+            else if (tabControl.SelectedIndex == 1)
+            {
+                NumbersThreadDisplay(e);
+            }
+        }
+
+        private static void DoWorkForQueuesRolls(DoWorkEventArgs e, QueuesRollsReader rollsReader)
+        {
+            var args = (GetRollsArgument)e.Argument;
+
+            List<Roll> rolls = rollsReader.GetRolls(
                         args.Step,
                         args.State,
                         args.Priority,
                         args.Specialist,
                         args.Project,
                         args.Roll);
+
+            e.Result = rolls;
         }
 
-        void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private static void DoWorkForSpecialistRolls(DoWorkEventArgs e, SpecialistRollsReader rollsReader)
         {
-            if (RollsTabQueuesControl.QueuesRolls != null)
+            var args = (GetRollsArgument)e.Argument;
+
+            List<Roll> rolls = rollsReader.GetRolls(
+                        args.Specialist,
+                        args.MinDate,
+                        args.MaxDate,
+                        args.Step,
+                        args.Roll);
+
+            e.Result = rolls;
+        }
+
+        private static void DoWorkForNumbers(DoWorkEventArgs e, DailyNumbersReader numbersReader)
+        {
+            var args = (GetRollsArgument)e.Argument;
+
+            var numList = numbersReader.GetNumbers(args.Specialist, args.Step);
+
+            e.Result = numList;
+        }
+
+        private void QueuesRollsThreadDisplay(RunWorkerCompletedEventArgs e)
+        {
+            if (e.Result != null)
             {
-                //everyone says I need to use invoke
-                //this.invoke or use this.begininvoke
-                RollsTabQueuesControl.queuesLv.Dispatcher.Invoke(new Action(() => { PopulateListView(true); }));
+                var rolls = (IEnumerable<Roll>)e.Result;
+                if (RollsTabQueuesControl.QueuesRolls != null)
+                    RollsTabQueuesControl.QueuesRolls.Clear();
+                foreach (var roll in rolls.Take(_rollBatchSizeQueue))
+                    RollsTabQueuesControl.QueuesRolls.Add(roll);
+
+                PopulateListView(RollsTabQueuesControl.queuesLv,
+                    RollsTabQueuesControl.QueuesRolls,
+                    RollsTabQueuesControl.emptyTxtBlck,
+                    true);
+                if (rolls.Count() > 200)
+                {
+                    LoadingProgressRing.IsActive = false;
+                    MessageBox.Show(this,
+                                    "Your query returned " + rolls.Count() + " results but only 200 have been displayed for performance reasons. Refine your filters and try again.",
+                                    "Roll Limit Exceeded",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Asterisk);
+                }
             }
             else
-                PopulateListView(false);
+            {
+                var rolls = new List<Roll>();
+                PopulateListView(RollsTabQueuesControl.queuesLv, rolls, RollsTabQueuesControl.emptyTxtBlck, false);
+            }
+            LoadingProgressRing.IsActive = false;
+        }
+
+        private void SpecialistRollsThreadDisplay(RunWorkerCompletedEventArgs e)
+        {
+            if (e.Result != null)
+            {
+                var rolls = (IEnumerable<Roll>)e.Result;
+                if (RollsTabRollsControl.Rolls != null)
+                    RollsTabRollsControl.Rolls.Clear();
+                foreach (var roll in rolls.Take(_rollBatchSizeRolls))
+                    RollsTabRollsControl.Rolls.Add(roll);
+
+                PopulateListView(RollsTabRollsControl.rollsLv,
+                    RollsTabRollsControl.Rolls,
+                    RollsTabRollsControl.emptyTxtBlck,
+                    true);
+                if (rolls.Count() > 600)
+                {
+                    LoadingProgressRing.IsActive = false;
+                    MessageBox.Show(this,
+                                    "Your query returned " + rolls.Count() + " results but only 600 have been displayed for performance reasons. Refine your filters and try again.",
+                                    "Roll Limit Exceeded",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Asterisk);
+                }
+            }
+            else
+            {
+                var rolls = new List<Roll>();
+                PopulateListView(RollsTabRollsControl.rollsLv, rolls, RollsTabRollsControl.emptyTxtBlck, false);
+            }
+            LoadingProgressRing.IsActive = false;
+        }
+
+        private void NumbersThreadDisplay(RunWorkerCompletedEventArgs e)
+        {
+            if (e.Result != null)
+            {
+                var numbers = (List<RollNumbers>)e.Result;
+                int images = 0;
+                double imgsPerHour = 0;
+                int seconds = 0;
+                foreach (var num in numbers)
+                {
+                    images += num.ImageCount;
+                    imgsPerHour += num.ImagesPerHour;
+                    seconds += num.Seconds;
+                }
+
+                imgsPerHour = imgsPerHour / numbers.Count;
+                double hours = (seconds / 60.0) / 60.0;
+
+                numbersLv.ItemsSource = numbers;
+                RollsNumLbl.Content = numbers.Count;
+                ImagesLbl.Content = images;
+                ImagesPerHourLbl.Content = Math.Round(imgsPerHour, 2);
+                RollsPerHourLbl.Content = Math.Round(numbers.Count / hours, 2);
+            }
+            else emptyTxtBlck.Visibility = Visibility.Visible;
+
+            LoadingProgressRing.IsActive = false;
         }
 
         #endregion
@@ -118,145 +263,118 @@ namespace Specialist_Dashboard
             {
                 if (rollsToggleBtn.IsChecked == false)
                 {
-                    if (RollsTabQueuesControl.stepComboBox.Text == "" && 
-                        RollsTabQueuesControl.stateComboBox.Text == "" && 
-                        RollsTabQueuesControl.priorityComboBox.Text == "" && 
-                        RollsTabQueuesControl.userComboBox.Text == "" && 
-                        RollsTabQueuesControl.queueProjectTxt.Text == "" && 
-                        RollsTabQueuesControl.queueRollTxt.Text == "")
-                    {
-                        MessageBox.Show(this, "Please enter at least one filter", "Filter Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                        return;
-                    }
-
-                    if (RollsTabQueuesControl.queuesLv.Items.Count > 0)
-                        RollsTabQueuesControl.QueuesRolls.Clear();
-
-
-                    //var data_context = new DataContext("epdb01", "JWF_Live");
-                    //var rollsReader = new QueuesRollsReader(data_context);
-                    var sReader = new SpecialistsReader();
-                    var spec = sReader.GetSpecialist(null, RollsTabQueuesControl.userComboBox.Text);
-
-                    //start a new thread to do expensive query
-                    //var syncContext = System.Threading.SynchronizationContext.Current;
-
-                    var step = RollsTabQueuesControl.stepComboBox.Text;
-                    var st = RollsTabQueuesControl.stateComboBox.Text;
-                    var priority = RollsTabQueuesControl.priorityComboBox.Text;
-                    var project = RollsTabQueuesControl.queueProjectTxt.Text;
-                    var roll = RollsTabQueuesControl.queueRollTxt.Text;
-
-                    var arg = new GetRollsArgument(step, st, priority, project, roll, spec);
-                    this.BackgroundWorker.RunWorkerAsync(arg);
-
-                    //System.Threading.Tasks.Task.Factory.StartNew(() =>
-                    //    {
-                    //        RollsTabQueuesControl.QueuesRolls = rollsReader.GetRolls(
-                    //            step,
-                    //            st,
-                    //            priority,
-                    //            spec,
-                    //            project,
-                    //            roll);
-
-                        //    if (RollsTabQueuesControl.QueuesRolls != null)
-                        //    {
-                        //        RollsTabQueuesControl.queuesLv.Dispatcher.Invoke(() => { RollsTabQueuesControl.queuesLv.ItemsSource = RollsTabQueuesControl.QueuesRolls; });
-                        //        RollsTabQueuesControl.emptyTxtBlck.Dispatcher.Invoke(() => { RollsTabQueuesControl.emptyTxtBlck.Visibility = Visibility.Hidden; });
-                        //    }
-                        //    else
-                        //        PopulateListView(false);
-                        //});
-
-                    
+                    QueuesRollsSearch();
+                    return;
                 }
                 else if (rollsToggleBtn.IsChecked == true)
                 {
-                    if (RollsTabRollsControl.rollStepComboBox.Text != "")
-                    {
-                        if (RollsTabRollsControl.rollsLv.Items.Count > 0)
-                            RollsTabRollsControl.Rolls.Clear();
-
-                        var data_context = new DataContext("epdb01", "JWF_Live");
-                        var rollsReader = new SpecialistRollsReader(data_context);
-
-                        string user = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-                        var sReader = new SpecialistsReader();
-                        var spec = sReader.GetSpecialist(user);
-
-                        var minDate = RollsTabRollsControl.fromDTPick.SelectedDate;
-                        var maxDate = RollsTabRollsControl.toDTPick.SelectedDate;
-
-                        if (minDate == null)
-                            minDate = System.DateTime.Today;
-                        if (maxDate == null)
-                            maxDate = System.DateTime.Now;
-
-                        RollsTabRollsControl.Rolls = rollsReader.GetRolls(
-                            spec,
-                            Convert.ToDateTime(minDate),
-                            Convert.ToDateTime(maxDate),
-                            RollsTabRollsControl.rollStepComboBox.Text,
-                            RollsTabRollsControl.rollRollnameTxt.Text);
-
-                        if (RollsTabRollsControl.rollsLv != null)
-                        {
-                            RollsTabRollsControl.rollsLv.ItemsSource = RollsTabRollsControl.Rolls;
-                            RollsTabRollsControl.emptyTxtBlck.Visibility = Visibility.Hidden;
-                        }
-                        else RollsTabRollsControl.emptyTxtBlck.Visibility = Visibility.Visible;
-                        RollsTabRollsControl.rollsLv.ItemsSource = RollsTabRollsControl.Rolls;
-                    }
-                    else MessageBox.Show(this, "Please enter a Step", "Filter Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    SpecialistRollsSearch();
+                    return;
                 }
             }
             else if (tabControl.SelectedIndex == 1)
             {
-                numbersLv.ItemsSource = null;
-                numbersLv.Items.Clear();
-                emptyTxtBlck.Visibility = Visibility.Hidden;
-                var numbersReader = new DailyNumbersReader();
-                var specReader = new SpecialistsReader();
-                var spec = specReader.GetSpecialist(System.Security.Principal.WindowsIdentity.GetCurrent().Name);
-                NumList = numbersReader.GetNumbers(spec, numbersStepComboBox.Text);
-
-                if (NumList != null)
-                {
-                    int images = 0;
-                    double imgsPerHour = 0;
-                    int seconds = 0;
-                    foreach (var num in NumList)
-                    {
-                        images += num.ImageCount;
-                        imgsPerHour += num.ImagesPerHour;
-                        seconds += num.Seconds;
-                    }
-                    imgsPerHour = imgsPerHour / NumList.Count;
-                    double hours = (seconds / 60.0) / 60.0;
-
-                    numbersLv.ItemsSource = NumList;
-                    RollsNumLbl.Content = NumList.Count;
-                    ImagesLbl.Content = images;
-                    ImagesPerHourLbl.Content = Math.Round(imgsPerHour, 2);
-                    RollsPerHourLbl.Content = Math.Round(NumList.Count / hours, 2);
-                }
-                else emptyTxtBlck.Visibility = Visibility.Visible;
+                NumbersSearch();
+                return;
             }
         }
 
-        public void PopulateListView(bool rollsExist)
+        private void NumbersSearch()
+        {
+            numbersLv.ItemsSource = null;
+            numbersLv.Items.Clear();
+            emptyTxtBlck.Visibility = Visibility.Hidden;
+            var numbersReader = new DailyNumbersReader();
+            var specReader = new SpecialistsReader();
+            var spec = specReader.GetSpecialist(System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+
+            LoadingProgressRing.IsActive = true;
+            var arg = new GetRollsArgument(spec,
+                    numbersStepComboBox.Text);
+
+            this.BackgroundWorker.RunWorkerAsync(arg);
+            //NumList = numbersReader.GetNumbers(spec, numbersStepComboBox.Text);
+        }
+
+        private void SpecialistRollsSearch()
+        {
+            if (RollsTabRollsControl.rollStepComboBox.Text != "")
+            {
+                if (RollsTabRollsControl.rollsLv.Items.Count > 0)
+                    RollsTabRollsControl.Rolls.Clear();
+
+                var data_context = new DataContext("epdb01", "JWF_Live");
+                var rollsReader = new SpecialistRollsReader(data_context);
+
+                string user = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                var sReader = new SpecialistsReader();
+                var spec = sReader.GetSpecialist(user);
+
+                var minDate = RollsTabRollsControl.fromDTPick.SelectedDate;
+                var maxDate = RollsTabRollsControl.toDTPick.SelectedDate;
+
+                if (minDate == null)
+                    minDate = System.DateTime.Today;
+                if (maxDate == null)
+                    maxDate = System.DateTime.Now;
+
+                LoadingProgressRing.IsActive = true;
+                var arg = new GetRollsArgument(spec,
+                    Convert.ToDateTime(minDate),
+                    Convert.ToDateTime(maxDate),
+                    RollsTabRollsControl.rollStepComboBox.Text,
+                    RollsTabRollsControl.rollRollnameTxt.Text);
+
+                this.BackgroundWorker.RunWorkerAsync(arg);
+            }
+            else MessageBox.Show(this, "Please enter a Step", "Filter Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+        }
+
+        private void QueuesRollsSearch()
+        {
+            if (RollsTabQueuesControl.stepComboBox.Text == "" &&
+                RollsTabQueuesControl.stateComboBox.Text == "" &&
+                RollsTabQueuesControl.priorityComboBox.Text == "" &&
+                RollsTabQueuesControl.userComboBox.Text == "" &&
+                RollsTabQueuesControl.queueProjectTxt.Text == "" &&
+                RollsTabQueuesControl.queueRollTxt.Text == "")
+            {
+                MessageBox.Show(this, "Please enter at least one filter", "Filter Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
+
+            if (RollsTabQueuesControl.queuesLv.Items.Count > 0)
+                RollsTabQueuesControl.QueuesRolls.Clear();
+
+            var sReader = new SpecialistsReader();
+            var spec = sReader.GetSpecialist(null, RollsTabQueuesControl.userComboBox.Text);
+
+            var step = RollsTabQueuesControl.stepComboBox.Text;
+            var st = RollsTabQueuesControl.stateComboBox.Text;
+            var priority = RollsTabQueuesControl.priorityComboBox.Text;
+            var project = RollsTabQueuesControl.queueProjectTxt.Text;
+            var roll = RollsTabQueuesControl.queueRollTxt.Text;
+
+            LoadingProgressRing.IsActive = true;
+            var arg = new GetRollsArgument(step, st, priority, project, roll, spec);
+            this.BackgroundWorker.RunWorkerAsync(arg);
+            return;
+        }
+
+        public void PopulateListView<T>(ListView lv, List<T> list, TextBlock textBlock, bool rollsExist)
         {
             if (rollsExist)
             {
-                RollsTabQueuesControl.queuesLv.ItemsSource = RollsTabQueuesControl.QueuesRolls;
-                RollsTabQueuesControl.emptyTxtBlck.Visibility = Visibility.Hidden;
+                lv.ItemsSource = null;
+                lv.Items.Clear();
+                lv.ItemsSource = list;
+                textBlock.Visibility = Visibility.Hidden;
             }
             else
             {
-                RollsTabQueuesControl.queuesLv.ItemsSource = null;
-                RollsTabQueuesControl.queuesLv.Items.Clear();
-                RollsTabQueuesControl.emptyTxtBlck.Visibility = Visibility.Visible;
+                lv.ItemsSource = null;
+                lv.Items.Clear();
+                textBlock.Visibility = Visibility.Visible;
             }
         }
 
@@ -287,33 +405,59 @@ namespace Specialist_Dashboard
 
         #region Show Numbers methods
 
+        int _lastCommand = 0;
         private void MetroWindow_KeyDown_1(object sender, KeyEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.Enter) || Keyboard.IsKeyDown(Key.F5))
+            {
                 refreshBtn_Click_1(sender, e);
+                _lastCommand = 1;
+            }
             else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightCtrl) && Keyboard.IsKeyDown(Key.RightAlt))
             {
-                RollsTabQueuesControl.queueProjectTxt.Text = "Project Count: " + ListCounter(RollsTabQueuesControl.queueProjectTxt);
-                RollsTabQueuesControl.queueRollTxt.Text = "Roll Count: " + ListCounter(RollsTabQueuesControl.queueRollTxt);
-                RollsTabQueuesControl.stateComboBox.Text = "State Count: " + ListCounter(RollsTabQueuesControl.stateComboBox);
-                RollsTabQueuesControl.stepComboBox.Text = "Step Count: " + ListCounter(RollsTabQueuesControl.stepComboBox);
-                RollsTabQueuesControl.userComboBox.Text = "User Count: " + ListCounter(RollsTabQueuesControl.userComboBox);
-                RollsTabQueuesControl.priorityComboBox.Text = "Priority Count: " + ListCounter(RollsTabQueuesControl.priorityComboBox);
+                if (_lastCommand != 2)
+                {
+                    RollsTabQueuesControl.Project = RollsTabQueuesControl.queueProjectTxt.Text;
+                    RollsTabQueuesControl.RollName = RollsTabQueuesControl.queueRollTxt.Text;
+                    RollsTabQueuesControl.State = RollsTabQueuesControl.stateComboBox.Text;
+                    RollsTabQueuesControl.Step = RollsTabQueuesControl.stepComboBox.Text;
+                    RollsTabQueuesControl.User = RollsTabQueuesControl.userComboBox.Text;
+                    RollsTabQueuesControl.Priority = RollsTabQueuesControl.priorityComboBox.Text;
+
+                    RollsTabQueuesControl.queueProjectTxt.Text = "Project Count: " + ListCounter(RollsTabQueuesControl.queueProjectTxt);
+                    RollsTabQueuesControl.queueRollTxt.Text = "Roll Count: " + ListCounter(RollsTabQueuesControl.queueRollTxt);
+                    RollsTabQueuesControl.stateComboBox.Text = "State Count: " + ListCounter(RollsTabQueuesControl.stateComboBox);
+                    RollsTabQueuesControl.stepComboBox.Text = "Step Count: " + ListCounter(RollsTabQueuesControl.stepComboBox);
+                    RollsTabQueuesControl.userComboBox.Text = "User Count: " + ListCounter(RollsTabQueuesControl.userComboBox);
+                    RollsTabQueuesControl.priorityComboBox.Text = "Priority Count: " + ListCounter(RollsTabQueuesControl.priorityComboBox);
+
+                    _lastCommand = 2;
+                }
             }
+            else
+                _lastCommand = 3;
+
         }
 
         private void MetroWindow_KeyUp_1(object sender, KeyEventArgs e)
         {
             if (Keyboard.IsKeyUp(Key.LeftCtrl) && Keyboard.IsKeyUp(Key.LeftAlt) || Keyboard.IsKeyUp(Key.RightCtrl) && Keyboard.IsKeyUp(Key.RightAlt))
             {
-                if (RollsTabQueuesControl.queueProjectTxt.Text.Length >= 14 && RollsTabQueuesControl.queueProjectTxt.Text.Substring(0, 14) == "Project Count:")
+                if (_lastCommand == 2)
                 {
-                    RollsTabQueuesControl.queueProjectTxt.Text = RollsTabQueuesControl.Project;
-                    RollsTabQueuesControl.queueRollTxt.Text = RollsTabQueuesControl.RollName;
-                    RollsTabQueuesControl.stateComboBox.Text = RollsTabQueuesControl.State;
-                    RollsTabQueuesControl.stepComboBox.Text = RollsTabQueuesControl.Step;
-                    RollsTabQueuesControl.userComboBox.Text = RollsTabQueuesControl.User;
-                    RollsTabQueuesControl.priorityComboBox.Text = RollsTabQueuesControl.Priority;
+                    if (RollsTabQueuesControl.queueProjectTxt.Text.Length >= 14 && RollsTabQueuesControl.queueProjectTxt.Text.Substring(0, 14) == "Project Count:")
+                    {
+                        RollsTabQueuesControl.queueProjectTxt.Text = RollsTabQueuesControl.Project;
+                        RollsTabQueuesControl.queueRollTxt.Text = RollsTabQueuesControl.RollName;
+                        RollsTabQueuesControl.stateComboBox.Text = RollsTabQueuesControl.State;
+                        RollsTabQueuesControl.stepComboBox.Text = RollsTabQueuesControl.Step;
+                        RollsTabQueuesControl.userComboBox.Text = RollsTabQueuesControl.User;
+                        RollsTabQueuesControl.priorityComboBox.Text = RollsTabQueuesControl.Priority;
+                    }
+                }
+                else
+                {
+
                 }
             }
         }

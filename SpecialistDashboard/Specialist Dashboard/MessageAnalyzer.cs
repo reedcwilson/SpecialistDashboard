@@ -9,7 +9,6 @@ namespace Specialist_Dashboard
     class MessageAnalyzer
     {
         public List<ImageFileNote> Chops { get; set; }
-        public List<ImageFileNote> Edits { get; set; }
         public List<ImageFileNote> Lights { get; set; }
         public List<ImageFileNote> Darks { get; set; }
         public List<ImageFileNote> Others { get; set; }
@@ -25,7 +24,6 @@ namespace Specialist_Dashboard
             Darks = new List<ImageFileNote>();
             Stretches = new List<ImageFileNote>();
             Chops = new List<ImageFileNote>();
-            Edits = new List<ImageFileNote>();
             Bandings = new List<ImageFileNote>();
         }
 
@@ -50,8 +48,6 @@ namespace Specialist_Dashboard
                     Bandings.Add(note);
                 else if (note.NoteMessage.ToLower() == "automated message - image marked as chopped error by auditor")
                     Chops.Add(note);
-                else if (note.NoteMessage.ToLower().Substring(0, 16) == "edited in imageq")
-                    Edits.Add(note);
             }
             var categories = new Dictionary<string, List<ImageFileNote>>();
             categories.Add("Other", Others);
@@ -61,7 +57,6 @@ namespace Specialist_Dashboard
             categories.Add("Dark", Darks);
             categories.Add("Banding", Bandings);
             categories.Add("Stretch", Stretches);
-            categories.Add("Edit", Edits);
 
             return categories;
         }

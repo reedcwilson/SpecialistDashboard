@@ -21,27 +21,7 @@
     </UserControl.Resources>
     
     <Grid x:Name="JobSpecGrid" Background="WhiteSmoke">
-        
         <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 0, 0, 0">
-            <TabItem Header="History">
-                <Grid>
-                    <ListView Name="historyLv" Margin="0,0,284,0" SelectionChanged="historyLv_Selected_1" GridViewColumnHeader.Click="GridViewColumn_Click_1" >
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Date" Width="135" DisplayMemberBinding="{Binding Date}"/>
-                                <GridViewColumn Header="Step" Width="120" DisplayMemberBinding="{Binding Step}"/>
-                                <!--<GridViewColumn Header="User" Width="85" DisplayMemberBinding="{Binding Spec.Username}"/>
-                                <GridViewColumn Header="Message" Width="300" DisplayMemberBinding="{Binding Message}"/>-->
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <RichTextBox Name="MessageRichTxt" HorizontalAlignment="Right" IsReadOnly="True" Margin="0,21,10,0" VerticalAlignment="Stretch" Width="269">
-                        <FlowDocument >
-                        </FlowDocument>
-                    </RichTextBox>
-                    <Label Name="HistoryUserLbl" Content="User" HorizontalAlignment="Right" Margin="0,-5,10,0" VerticalAlignment="Top"/>
-                </Grid>
-            </TabItem>
             <TabItem Header="Notes">
                 <Grid>
                     <ListView Name="notesLv" Margin="0,0,284,0" SelectionChanged="notesLv_SelectionChanged_1" GridViewColumnHeader.Click="GridViewColumn_Click_2">
@@ -60,6 +40,25 @@
                     <Label x:Name="NotesUserLbl" Content="User" HorizontalAlignment="Right" Margin="0,-5,76,0" VerticalAlignment="Top"/>
                     <Button Content="New" HorizontalAlignment="Right" Margin="0,0,10,37" VerticalAlignment="Bottom" IsEnabled="False" Width="61"/>
                     <Button Content="Save" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Bottom" IsEnabled="False" Width="61"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="History">
+                <Grid>
+                    <ListView Name="historyLv" Margin="0,0,284,0" SelectionChanged="historyLv_Selected_1" GridViewColumnHeader.Click="GridViewColumn_Click_1" >
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Date" Width="135" DisplayMemberBinding="{Binding Date}"/>
+                                <GridViewColumn Header="Step" Width="120" DisplayMemberBinding="{Binding Step}"/>
+                                <!--<GridViewColumn Header="User" Width="85" DisplayMemberBinding="{Binding Spec.Username}"/>
+                                <GridViewColumn Header="Message" Width="300" DisplayMemberBinding="{Binding Message}"/>-->
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <RichTextBox Name="MessageRichTxt" HorizontalAlignment="Right" IsReadOnly="True" Margin="0,21,10,0" VerticalAlignment="Stretch" Width="269">
+                        <FlowDocument >
+                        </FlowDocument>
+                    </RichTextBox>
+                    <Label Name="HistoryUserLbl" Content="User" HorizontalAlignment="Right" Margin="0,-5,10,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Images">
@@ -84,7 +83,8 @@
                         <FlowDocument />
                     </RichTextBox>
                     <Label x:Name="ImgNoteUpdateTimeLbl" Content="Update Time" HorizontalAlignment="Right" Margin="0,-5,175,0" VerticalAlignment="Top"/>
-                    <Button Name="textGenerate" Content="See Text" HorizontalAlignment="Right" Margin="0,131,10,0" VerticalAlignment="Top" Width="89" Click="textGenerate_Click_1"/>
+                    <Button Name="textGenerate" Content="Note" HorizontalAlignment="Right" Margin="0,131,103,0" VerticalAlignment="Top" Width="62" Click="textGenerate_Click_1" Height="37"/>
+                    <Controls:ToggleSwitch x:Name="FilteredListTS" Header="Filter Notes" HorizontalAlignment="Right" VerticalAlignment="Top" Width="98" Height="55" Click="FilteredListTS_Click_1" Margin="0,113,5,0"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Details">

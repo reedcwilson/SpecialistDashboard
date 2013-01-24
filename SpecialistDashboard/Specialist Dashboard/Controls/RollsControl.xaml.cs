@@ -86,6 +86,8 @@ namespace Specialist_Dashboard.Controls
                 {
                     DetailsTabControl.Items.Add(tab);
                     DetailsTabControl.SelectedIndex = DetailsTabControl.Items.Count - 1;
+                    jobSpecControl.historyLv.SelectedIndex = 0;
+                    jobSpecControl.notesLv.SelectedIndex = 0;
                 }
                 else
                     DetailsTabControl.SelectedIndex = i;

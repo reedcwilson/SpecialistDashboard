@@ -27,6 +27,7 @@ namespace Specialist_Dashboard
         public AllJobSpecUpdates AllJSUpdates { get; set; }
         public ProjectSpecUpdates ProjectSpecUpdates { get; set; }
         public RollPaths MyRollPaths { get; set; }
+        public List<ImageNote> FilteredImageNotes { get; set; }
 
         public JobSpecControl(Roll roll)
         {
@@ -308,32 +309,38 @@ namespace Specialist_Dashboard
 
         private void textGenerate_Click_1(object sender, RoutedEventArgs e)
         {
-            var mesAnalyzer = new MessageAnalyzer();
-            var categories = mesAnalyzer.Analyze(MyBasicRoll.RollName);
-            var sBuilder = new StringBuilder();
-
-            foreach (var category in categories)
+            if (MyRoll.ImageNotes.Count() != 0)
             {
-                sBuilder.AppendLine("Images Marked As " + category.Key + ":");
-                int i = 0;
-                foreach (var note in category.Value)
+                var mesAnalyzer = new MessageAnalyzer();
+                var categories = mesAnalyzer.Analyze(MyBasicRoll.RollName);
+                var sBuilder = new StringBuilder();
+
+                foreach (var category in categories)
                 {
-                    sBuilder.Append(note.ImageNum);
-                    if (category.Value.Count > 1)
+                    if (category.Value.Count > 0)
                     {
-                        if (i != category.Value.Count - 1)
-                            sBuilder.Append(", ");
+                        sBuilder.AppendLine("Images Marked As " + category.Key + ":");
+                        int i = 0;
+                        foreach (var note in category.Value)
+                        {
+                            sBuilder.Append(note.ImageNum);
+                            if (category.Value.Count > 1)
+                            {
+                                if (i != category.Value.Count - 1)
+                                    sBuilder.Append(", ");
+                            }
+                            i++;
+                        }
+                        sBuilder.AppendLine("");
+                        sBuilder.AppendLine("");
                     }
-                    i++;
                 }
-                sBuilder.AppendLine("");
-                sBuilder.AppendLine("");
+                var paragraph = new Paragraph();
+                paragraph.Inlines.Add(new Run(sBuilder.ToString()));
+                var flowdoc = new FlowDocument();
+                flowdoc.Blocks.Add(paragraph);
+                ImgNoteMessageRichTxt.Document = flowdoc; 
             }
-            var paragraph = new Paragraph();
-            paragraph.Inlines.Add(new Run(sBuilder.ToString()));
-            var flowdoc = new FlowDocument();
-            flowdoc.Blocks.Add(paragraph);
-            ImgNoteMessageRichTxt.Document = flowdoc;
         }
 
         private void JobSpecOpenHLink_Click_1(object sender, RoutedEventArgs e)
@@ -543,6 +550,32 @@ namespace Specialist_Dashboard
             lv.ItemsSource = null;
             lv.Items.Clear();
             lv.ItemsSource = list;
+        }
+
+        private void FilteredListTS_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (Convert.ToBoolean(FilteredListTS.IsChecked))
+            {
+                if (MyRoll.ImageNotes.Count != 0)
+                {
+                    FilteredImageNotes = new List<ImageNote>();
+                    foreach (var note in MyRoll.ImageNotes)
+                    {
+                        if (note.NoteMessage.ToLower().Substring(0, 17) != "automated message")
+                            FilteredImageNotes.Add(note);
+                    }
+                    imgNotesLv.ItemsSource = null;
+                    imgNotesLv.Items.Clear();
+                    imgNotesLv.ItemsSource = FilteredImageNotes;
+                }
+            }
+            else
+            {
+                imgNotesLv.ItemsSource = null;
+                imgNotesLv.Items.Clear();
+                imgNotesLv.ItemsSource = MyRoll.ImageNotes;
+            }
+
         }
     }
 }

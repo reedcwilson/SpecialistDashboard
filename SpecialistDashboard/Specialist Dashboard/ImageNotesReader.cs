@@ -33,8 +33,12 @@ namespace Specialist_Dashboard
                     DateTime date = reader.GetDateTime(3);
                     int imgNum = reader.GetInt32(0);
 
-                    var imgNote = new ImageNote(spec, n, date, imgNum);
-                    imgNotes.Add(imgNote);
+
+                    if (n.ToLower().Substring(0, 16) != "edited in imageq")
+                    {
+                        var imgNote = new ImageNote(spec, n, date, imgNum);
+                        imgNotes.Add(imgNote); 
+                    }
                 }
                 Data_Context.CloseConnection();
                 return imgNotes;

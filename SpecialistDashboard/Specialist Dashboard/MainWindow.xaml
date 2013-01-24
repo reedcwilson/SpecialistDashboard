@@ -38,13 +38,13 @@
                 <TabItem Header="Numbers">
                     <Grid>
                         <Label Name="RollsNumTitleLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Rolls" TextElement.FontSize="10" Margin="0,3,0,0" />
-                        <Label Name="RollsNumLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="31,3,0,0" Content="#" TextElement.FontSize="10" RenderTransformOrigin="0.5,0.217"/>
-                        <Label Name="RollsPerHourTitleLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,3,0,0" Content="Rolls/Hour" TextElement.FontSize="10"/>
-                        <Label Name="RollsPerHourLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="119,3,0,0" Content="#" TextElement.FontSize="10"/>
-                        <Label Name="ImagesTitleLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="159,3,0,0" Content="Images" TextElement.FontSize="10"/>
-                        <Label Name="ImagesLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="201,3,0,0" Content="#" TextElement.FontSize="10"/>
-                        <Label Name="ImagesPerHourTitleLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="251,3,0,0" Content="Images/Hour" TextElement.FontSize="10"/>
-                        <Label Name="ImagesPerHourLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="319,3,0,0" Content="#" TextElement.FontSize="10"/>
+                        <Label Name="RollsNumLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,3,0,0" Content="#" TextElement.FontSize="10" RenderTransformOrigin="0.5,0.217"/>
+                        <Label Name="RollsPerHourTitleLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="68,3,0,0" Content="Rolls/Hour" TextElement.FontSize="10"/>
+                        <Label Name="RollsPerHourLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="125,3,0,0" Content="#" TextElement.FontSize="10"/>
+                        <Label Name="ImagesTitleLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="181,3,0,0" Content="Images" TextElement.FontSize="10"/>
+                        <Label Name="ImagesLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="223,3,0,0" Content="#" TextElement.FontSize="10"/>
+                        <Label Name="ImagesPerHourTitleLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="276,3,0,0" Content="Img/Hr" TextElement.FontSize="10"/>
+                        <Label Name="ImagesPerHourLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="318,3,0,0" Content="#" TextElement.FontSize="10"/>
                         <ComboBox x:Name="numbersStepComboBox" Controls:TextboxHelper.Watermark="Step" HorizontalAlignment="Right" Margin="0,3,10,0" VerticalAlignment="Top" Width="134" TabIndex="2" IsEditable="True" Height="23" TextElement.Foreground="DimGray">
                             <ListBoxItem Content="Scan" TextElement.Foreground="DimGray"/>
                             <ListBoxItem Content="MekelFraming" TextElement.Foreground="DimGray"/>
@@ -62,7 +62,6 @@
                             </ListView.View>
                         </ListView>
                         <TextBlock Name="emptyTxtBlck" Text="No Results" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,61,0,0"/>
-                        
                     </Grid>
                 </TabItem>
                 <TabItem Header="Extra">
@@ -103,6 +102,7 @@
             </TabControl>
         </DockPanel>
         <ToggleButton x:Name="rollsToggleBtn" HorizontalAlignment="Right" VerticalAlignment="Top" Width="23" Height="13" Click="rollsToggleBtn_Click_1" Margin="0,15,15,0" />
+        <Controls:ProgressRing Name="LoadingProgressRing" IsActive="False" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="242,168,237,92" />
     </Grid>
 </Controls:MetroWindow>
 
