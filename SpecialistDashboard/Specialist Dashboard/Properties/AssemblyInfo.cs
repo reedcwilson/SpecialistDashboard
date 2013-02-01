@@ -8,9 +8,9 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Specialist Dashboard")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A dashboard for specialists")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Reed Wilson")]
 [assembly: AssemblyProduct("Specialist Dashboard")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]

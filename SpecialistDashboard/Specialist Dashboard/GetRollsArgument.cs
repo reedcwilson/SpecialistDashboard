@@ -14,6 +14,10 @@ namespace Specialist_Dashboard
         public string Project { get; set; }
         public string Roll { get; set; }
         public Specialist Specialist { get; set; }
+
+        public List<Roll> Rolls { get; set; }
+        public List<RollNumbers> RollNumbers { get; set; }
+        public QueueNumbers QueueNumbers { get; set; }
         
         public DateTime MinDate { get; set; }
         public DateTime MaxDate { get; set; }
@@ -49,6 +53,12 @@ namespace Specialist_Dashboard
             this.Specialist = spec;
             this.Step = step;
             this.Tab = 1;
+        }
+
+        public GetRollsArgument(string project)
+        {
+            this.Tab = 2;
+            this.Project = project;
         }
     }
 }

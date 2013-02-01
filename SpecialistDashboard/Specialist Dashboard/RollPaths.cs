@@ -22,6 +22,10 @@ namespace Specialist_Dashboard
             JobSpec = GetJobSpec() + @"\" + MyRoll.ProjectId + @"\" + MyRoll.RollName + ".xml";
             //string jobSpecPath = JobSpec + @"\" + MyRoll.ProjectId + @"\" + MyRoll.RollName + ".xml";
             if (File.Exists(JobSpec)) RootElement = XElement.Load(JobSpec);
+            else if (File.Exists(GetJobSpec() + @"\" + MyRoll.RollName.Substring(0, 5) + @"\" + MyRoll.RollName + ".xml"))
+            {
+                RootElement = XElement.Load(GetJobSpec() + @"\" + MyRoll.RollName.Substring(0, 5) + @"\" + MyRoll.RollName + ".xml");
+            }
         }
 
         public RollPaths()
@@ -35,6 +39,14 @@ namespace Specialist_Dashboard
             if (_rootPath == null)
                 _rootPath = GetPath("RootPath", MyRoll.ProjectId, MyRoll.RollName);
             return _rootPath;
+        }
+
+        private string _rootImagesPath;
+        public string GetRootImagesPath()
+        {
+            if (_rootImagesPath == null)
+                _rootImagesPath = GetPath("RootImagesPath", MyRoll.ProjectId, MyRoll.RollName);
+            return _rootImagesPath;
         }
 
         private string _imageProcessPath;
@@ -69,6 +81,21 @@ namespace Specialist_Dashboard
                 if (File.Exists(JobSpec))
                 {
                     return RootElement.Element("Roll").Attribute("RootFolder").Value;
+                }
+                return null;
+            }
+            else if (pathType == "RootImagesPath")
+            {
+                if (File.Exists(JobSpec))
+                {
+                    if (RootElement.Attribute("ImagingBatchClass").Value == "Mekel")
+                    {
+                        return GetPath("RootPath", project, rollName) + @"\frames";
+                    }
+                    else
+                    {
+                        return GetPath("RootPath", project, rollName);
+                    }
                 }
                 return null;
             }
@@ -134,18 +161,21 @@ namespace Specialist_Dashboard
             return null;
         }
 
+        private string _jobSpec;
         public string GetJobSpec()
         {
-            //query to find the jobspec location
-            string sql = @"SELECT SettingValue
+            if (_jobSpec == null)
+            {
+                //query to find the jobspec location
+                string sql = @"SELECT SettingValue
                             FROM WorkFlowSettings WFS (NOLOCK)
                             WHERE WorkFlowSettingsName = 'JobSpecFolderBase'";
 
-            string jobSpec = Data_Context.ExecuteScalar(sql, "epdb01", "JWF_Live");
+                _jobSpec = Data_Context.ExecuteScalar(sql, "epdb01", "JWF_Live");
 
-            Data_Context.CloseConnection();
-
-            return jobSpec;
+                Data_Context.CloseConnection();
+            }
+            return _jobSpec;
         }
     }
 }

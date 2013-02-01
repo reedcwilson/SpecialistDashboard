@@ -132,31 +132,35 @@ namespace Specialist_Dashboard
             if (QueuesRolls != null)
             {
                 GridViewColumnHeader headerClicked = e.OriginalSource as GridViewColumnHeader;
-                string header = headerClicked.Column.Header as string;
 
-                if (headerClicked != null)
+                if (headerClicked.Column != null)
                 {
-                    if (headerClicked != _lastHeaderClicked)
+                    string header = headerClicked.Column.Header as string;
+
+                    if (headerClicked != null)
                     {
-                        SortColumn(header);
-                        _lastDirection = 1;
-                    }
-                    else
-                    {
-                        if (_lastDirection == 1)
+                        if (headerClicked != _lastHeaderClicked)
                         {
-                            _lastDirection = -1;
-                            QueuesRolls.Reverse();
-                            ReassignListview();
+                            SortColumn(header);
+                            _lastDirection = 1;
                         }
                         else
                         {
-                            _lastDirection = 1;
-                            SortColumn(header);
+                            if (_lastDirection == 1)
+                            {
+                                _lastDirection = -1;
+                                QueuesRolls.Reverse();
+                                ReassignListview();
+                            }
+                            else
+                            {
+                                _lastDirection = 1;
+                                SortColumn(header);
+                            }
                         }
                     }
+                    _lastHeaderClicked = headerClicked;    
                 }
-                _lastHeaderClicked = headerClicked;   
             }          
         }
 

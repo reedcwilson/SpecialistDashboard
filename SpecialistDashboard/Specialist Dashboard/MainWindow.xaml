@@ -33,18 +33,20 @@
         <DockPanel VerticalAlignment="Stretch">
             <TabControl Name="tabControl" DockPanel.Dock="Top" HorizontalAlignment="Stretch" Margin="0, 0, 0, 0" SelectionChanged="tabControl_SelectionChanged_1" >
                 <TabItem Header="Rolls" Name="rollsTab">
-                    <Canvas/>
+                    <Grid>
+                        <Canvas/>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Numbers">
                     <Grid>
                         <Label Name="RollsNumTitleLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Rolls" TextElement.FontSize="10" Margin="0,3,0,0" />
-                        <Label Name="RollsNumLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,3,0,0" Content="#" TextElement.FontSize="10" RenderTransformOrigin="0.5,0.217"/>
+                        <Label Name="RollsNumLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,3,0,0" Content="0" TextElement.FontSize="10" RenderTransformOrigin="0.5,0.217"/>
                         <Label Name="RollsPerHourTitleLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="68,3,0,0" Content="Rolls/Hour" TextElement.FontSize="10"/>
-                        <Label Name="RollsPerHourLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="125,3,0,0" Content="#" TextElement.FontSize="10"/>
+                        <Label Name="RollsPerHourLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="125,3,0,0" Content="0" TextElement.FontSize="10"/>
                         <Label Name="ImagesTitleLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="181,3,0,0" Content="Images" TextElement.FontSize="10"/>
-                        <Label Name="ImagesLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="223,3,0,0" Content="#" TextElement.FontSize="10"/>
+                        <Label Name="ImagesLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="223,3,0,0" Content="0" TextElement.FontSize="10"/>
                         <Label Name="ImagesPerHourTitleLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="276,3,0,0" Content="Img/Hr" TextElement.FontSize="10"/>
-                        <Label Name="ImagesPerHourLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="318,3,0,0" Content="#" TextElement.FontSize="10"/>
+                        <Label Name="ImagesPerHourLbl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="318,3,0,0" Content="0" TextElement.FontSize="10"/>
                         <ComboBox x:Name="numbersStepComboBox" Controls:TextboxHelper.Watermark="Step" HorizontalAlignment="Right" Margin="0,3,10,0" VerticalAlignment="Top" Width="134" TabIndex="2" IsEditable="True" Height="23" TextElement.Foreground="DimGray">
                             <ListBoxItem Content="Scan" TextElement.Foreground="DimGray"/>
                             <ListBoxItem Content="MekelFraming" TextElement.Foreground="DimGray"/>
@@ -64,7 +66,7 @@
                         <TextBlock Name="emptyTxtBlck" Text="No Results" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,61,0,0"/>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Extra">
+                <TabItem Header="Info">
                     <Grid Background="WhiteSmoke">
                         <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="212" Margin="10,41,0,0" Stroke="DimGray" VerticalAlignment="Top" Width="134"/>
                         <Label x:Name="linksLbl" Content="Links" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Medium" TextElement.Foreground="DimGray" />
@@ -76,33 +78,64 @@
                         <Label x:Name="dexterToolsLinkLbl" Content="Dexter Tools" HorizontalAlignment="Left" Margin="19,176,0,0" VerticalAlignment="Top" TextElement.Foreground="DarkSlateGray" MouseEnter="LinkLbl_MouseEnter" MouseLeave="LinkLbl_MouseLeave_1" MouseLeftButtonUp="LinkLbl_MouseLeftButtonUp_1"/>
                         <Label x:Name="adminToolsLinkLbl" Content="Admin Tools" HorizontalAlignment="Left" Margin="19,202,0,0" VerticalAlignment="Top" TextElement.Foreground="DarkSlateGray" MouseEnter="LinkLbl_MouseEnter" MouseLeave="LinkLbl_MouseLeave_1" MouseLeftButtonUp="LinkLbl_MouseLeftButtonUp_1"/>
                         <Label x:Name="ezLaborLinkLbl" Content="ezLabor" HorizontalAlignment="Left" Margin="19,227,0,0" VerticalAlignment="Top" TextElement.Foreground="DarkSlateGray" MouseEnter="LinkLbl_MouseEnter" MouseLeave="LinkLbl_MouseLeave_1" MouseLeftButtonUp="LinkLbl_MouseLeftButtonUp_1"/>
-
-                        <!--Try this to make a mouse hover event: http://stackoverflow.com/questions/13617064/change-the-labels-foreground-colour-on-mouseover-wpf-->
-
-                        <ListView x:Name="extraProjectLv" HorizontalAlignment="Left" Margin="149,41,0,38" VerticalAlignment="Stretch" Width="102">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn/>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                        <ListView x:Name="extraUpdateFeedLv" HorizontalAlignment="Stretch" Margin="256,41,10,10" VerticalAlignment="Stretch">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn/>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                        <Label x:Name="extraProjectLbl" Content="Project" HorizontalAlignment="Left" Margin="149,10,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Medium" TextElement.Foreground="DimGray" RenderTransformOrigin="2.18,0.5" />
-                        <Label x:Name="extraUpdateFeedLbl" Content="Update Feed" HorizontalAlignment="Left" Margin="256,10,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Medium" TextElement.Foreground="DimGray" RenderTransformOrigin="2.085,0.403" />
-                        <Button x:Name="extraPlusBtn" Content="+" HorizontalAlignment="Left" Margin="149,0,0,8" VerticalAlignment="Bottom" Width="29" TextElement.Foreground="DimGray" Height="25"/>
-                        <Button x:Name="extraMinusBtn" Content="-" HorizontalAlignment="Left" Margin="183,0,0,8" VerticalAlignment="Bottom" Width="29" TextElement.Foreground="DimGray" Height="25"/>
+                        <TextBox Name="infoQueueProjectTxt" Controls:TextboxHelper.ClearTextButton="True" Controls:TextboxHelper.Watermark="Project" HorizontalAlignment="Left" Height="23" Margin="178,41,0,0" TextAlignment="Left" TextElement.Foreground="DimGray" VerticalAlignment="Top" Width="190" TabIndex="5"/>
+                        <Label x:Name="QueuesLbl" Content="Queues" HorizontalAlignment="Left" Margin="178,10,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Medium" TextElement.Foreground="DimGray" />
+                        <Label Name="ScanTitleLbl" Content="Scan" HorizontalAlignment="Left" Margin="178,67,0,0" VerticalAlignment="Top"/>
+                        <Label Name="FramingTitleLbl" Content="Frame" HorizontalAlignment="Left" Margin="178,93,0,0" VerticalAlignment="Top"/>
+                        <Label Name="MekelExtractingTitleLbl" Content="ME" HorizontalAlignment="Left" Margin="178,119,0,0" VerticalAlignment="Top"/>
+                        <Label Name="BatchValidTitleLbl" Content="BV" HorizontalAlignment="Left" Margin="301,67,0,0" VerticalAlignment="Top"/>
+                        <Label Name="ImgProcTitleLbl" Content="IP" HorizontalAlignment="Left" Margin="301,93,0,0" VerticalAlignment="Top"/>
+                        <Label Name="QATitleLbl" Content="QA" HorizontalAlignment="Left" Margin="301,119,0,0" VerticalAlignment="Top"/>
+                        <Label Name="QETitleLbl" Content="QE" HorizontalAlignment="Left" Margin="408,67,0,0" VerticalAlignment="Top"/>
+                        <Label Name="GridlinesTitleLbl" Content="Grid" HorizontalAlignment="Left" Margin="408,93,0,0" VerticalAlignment="Top"/>
+                        <Label Name="ScanLbl" Content="0" HorizontalAlignment="Left" Margin="226,67,0,0" VerticalAlignment="Top"/>
+                        <Label Name="FramingLbl" Content="0" HorizontalAlignment="Left" Margin="226,93,0,0" VerticalAlignment="Top"/>
+                        <Label Name="MekelExtractingLbl" Content="0" HorizontalAlignment="Left" Margin="226,119,0,0" VerticalAlignment="Top"/>
+                        <Label Name="BatchValidatingLbl" Content="0" HorizontalAlignment="Left" Margin="333,67,0,0" VerticalAlignment="Top"/>
+                        <Label Name="ImgProcLbl" Content="0" HorizontalAlignment="Left" Margin="333,93,0,0" VerticalAlignment="Top"/>
+                        <Label Name="QALbl" Content="0" HorizontalAlignment="Left" Margin="333,119,0,0" VerticalAlignment="Top"/>
+                        <Label Name="QELbl" Content="0" HorizontalAlignment="Left" Margin="445,67,0,0" VerticalAlignment="Top"/>
+                        <Label Name="GridlinesLbl" Content="0" HorizontalAlignment="Left" Margin="445,93,0,0" VerticalAlignment="Top"/>
+                        <ProgressBar Name="ScanningShareProgressBar" HorizontalAlignment="Left" Margin="245,187,0,0" VerticalAlignment="Top" Width="175" Height="7"/>
+                        <ProgressBar Name="ImagingShareProgressBar" HorizontalAlignment="Left" Margin="245,213,0,0" VerticalAlignment="Top" Width="175" Height="7"/>
+                        <ProgressBar Name="StagingShareProgressBar" HorizontalAlignment="Left" Margin="245,239,0,0" VerticalAlignment="Top" Width="175" Height="7"/>
+                        <Label Name="ScanningShareLbl" Content="Scanning" HorizontalAlignment="Left" Margin="178,175,0,0" VerticalAlignment="Top"/>
+                        <Label Name="ImagingShareLbl" Content="Imaging" HorizontalAlignment="Left" Margin="178,201,0,0" VerticalAlignment="Top"/>
+                        <Label Name="StagingShareLbl" Content="Staging" HorizontalAlignment="Left" Margin="178,227,0,0" VerticalAlignment="Top"/>
+                        <Label x:Name="SharesLbl" Content="Shares" HorizontalAlignment="Left" Margin="178,150,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Medium" TextElement.Foreground="DimGray" />
+                        <Label Name="ScanningRatioLbl" Content="0/0 TB" HorizontalAlignment="Left" Margin="425,176,0,0" VerticalAlignment="Top"/>
+                        <Label Name="ImagingRatioLbl" Content="0/0 TB" HorizontalAlignment="Left" Margin="425,202,0,0" VerticalAlignment="Top"/>
+                        <Label Name="StagingRatioLbl" Content="0/0 TB" HorizontalAlignment="Left" Margin="425,227,0,0" VerticalAlignment="Top"/>
                     </Grid>
                 </TabItem>
+                <!--<TabItem Header="Projects">
+                    <Grid Background="WhiteSmoke">
+                        <ListView x:Name="extraProjectLv" HorizontalAlignment="Left" Margin="10,36,0,50" VerticalAlignment="Stretch" Width="111">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <ListView x:Name="extraUpdateFeedLv" HorizontalAlignment="Stretch" Margin="126,36,10,10" VerticalAlignment="Stretch">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Label x:Name="extraProjectLbl" Content="Project" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Medium" TextElement.Foreground="DimGray" RenderTransformOrigin="2.18,0.5" />
+                        <Label x:Name="extraUpdateFeedLbl" Content="Update Feed" HorizontalAlignment="Left" Margin="126,0,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Medium" TextElement.Foreground="DimGray" RenderTransformOrigin="2.085,0.403" />
+                        <Button x:Name="extraPlusBtn" Content="+" HorizontalAlignment="Left" Margin="10,218,0,0" VerticalAlignment="Top" Width="57" TextElement.Foreground="DimGray" Padding="-30" Height="35"/>
+                        <Button x:Name="extraMinusBtn" Content="-" HorizontalAlignment="Left" Margin="67,0,0,10" VerticalAlignment="Bottom" Width="57" TextElement.Foreground="DimGray" Padding="-30" Height="35"/>
+                    </Grid>
+                </TabItem>-->
             </TabControl>
         </DockPanel>
         <ToggleButton x:Name="rollsToggleBtn" HorizontalAlignment="Right" VerticalAlignment="Top" Width="23" Height="13" Click="rollsToggleBtn_Click_1" Margin="0,15,15,0" />
         <Controls:ProgressRing Name="LoadingProgressRing" IsActive="False" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="242,168,237,92" />
+        <Controls:ProgressRing Name="NumbersLoadingProgressRing" IsActive="False" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="242,168,237,92" />
+        <Controls:ProgressRing Name="InfoLoadingProgressRing" IsActive="False" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="242,168,237,92" />
     </Grid>
 </Controls:MetroWindow>
 

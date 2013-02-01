@@ -16,6 +16,7 @@ namespace Specialist_Dashboard
         public XElement DeskewElement { get; set; }
         public Roll MyRoll { get; set; }
         public RollPaths MyRollPaths { get; set; }
+        public string JobSpecDataReturn { get; set; }
 
         private bool _autoCrop;
         public bool AutoCrop
@@ -91,32 +92,49 @@ namespace Specialist_Dashboard
         {
             MyRoll = myRoll;
             MyRollPaths = myRollPaths;
-            JobSpecPath = MyRollPaths.GetJobSpec() + @"\" + MyRoll.ProjectId + @"\" + MyRoll.RollName + ".xml";
+            JobSpecDataReturn = MyRollPaths.GetJobSpec();
+            JobSpecPath = JobSpecDataReturn + @"\" + MyRoll.ProjectId + @"\" + MyRoll.RollName + ".xml";
             RefreshRootElement();
-            //if (
-            AutoCropElement = RootElement.Element("Roll").Element("ImageProcessing").Element("ProcessSequence").Element("AutoCrop");
-            DeskewElement = RootElement.Element("Roll").Element("ImageProcessing").Element("ProcessSequence").Element("Deskew");
 
-            if (AutoCropElement != null)
+            if (RootElement != null)
             {
-                if (AutoCropElement.Attribute("xDirection").Value == "true" && AutoCropElement.Attribute("yDirection").Value == "true")
-                    AutoCrop = true;
-                else AutoCrop = false;
+                if (RootElement.Descendants("Roll")
+                                .Where(roll => roll.Elements("ImageProcessing").Any()).Any())
+                {
+                    if (RootElement.Element("Roll").Descendants("ImageProcessing")
+                            .Where(roll => roll.Elements("ProcessSequence").Any()).Any())
+                    {
+                        AutoCropElement = RootElement.Element("Roll").Element("ImageProcessing").Element("ProcessSequence").Element("AutoCrop");
+                        DeskewElement = RootElement.Element("Roll").Element("ImageProcessing").Element("ProcessSequence").Element("Deskew");
+                    }
+                }
 
-                if (AutoCropElement.Attribute("AggressiveFactor").Value == "true")
-                    AggressiveFactor = true;
-                else AggressiveFactor = false;
 
-                CropPadding = Convert.ToInt32(AutoCropElement.Attribute("CropPadding").Value);
+                if (AutoCropElement != null)
+                {
+                    if (AutoCropElement.Attribute("xDirection").Value == "true" && AutoCropElement.Attribute("yDirection").Value == "true")
+                        AutoCrop = true;
+                    else AutoCrop = false;
+
+                    if (AutoCropElement.Attribute("AggressiveFactor").Value == "true")
+                        AggressiveFactor = true;
+                    else AggressiveFactor = false;
+
+                    CropPadding = Convert.ToInt32(AutoCropElement.Attribute("CropPadding").Value);
+                }
+
+                if (DeskewElement != null)
+                    DeskewMaxAngle = Convert.ToInt32(DeskewElement.Attribute("MaxAngle").Value); 
             }
-
-            if (DeskewElement != null)
-                DeskewMaxAngle = Convert.ToInt32(DeskewElement.Attribute("MaxAngle").Value);
         }
 
         private void RefreshRootElement()
         {
             if (File.Exists(JobSpecPath)) RootElement = XElement.Load(JobSpecPath);
+            else if (File.Exists(JobSpecDataReturn + @"\" + MyRoll.RollName.Substring(0, 5) + @"\" + MyRoll.RollName + ".xml"))
+            {
+                RootElement = XElement.Load(JobSpecDataReturn + @"\" + MyRoll.RollName.Substring(0, 5) + @"\" + MyRoll.RollName + ".xml");
+            }
         }
     }
 }

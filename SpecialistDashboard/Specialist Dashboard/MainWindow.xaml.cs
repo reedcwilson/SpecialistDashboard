@@ -23,6 +23,7 @@ namespace Specialist_Dashboard
         public List<RollNumbers> NumList { get; set; }
 
         private BackgroundWorker BackgroundWorker;
+        private BackgroundWorker InfoBackgroundWorker;
 
         public MainWindow()
         {
@@ -47,6 +48,18 @@ namespace Specialist_Dashboard
             this.BackgroundWorker = new BackgroundWorker();
             this.BackgroundWorker.DoWork += BackgroundWorker_DoWork;
             this.BackgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
+
+            this.InfoBackgroundWorker = new BackgroundWorker();
+            this.InfoBackgroundWorker.DoWork += InfoBackgroundWorker_DoWork;
+            this.InfoBackgroundWorker.RunWorkerCompleted += InfoBackgroundWorker_RunWorkerCompleted;
+
+            QueuesNumbersInitializer("");
+        }
+
+        void QueuesNumbersInitializer(string project)
+        {
+            var argument = new GetRollsArgument(project);
+            this.InfoBackgroundWorker.RunWorkerAsync(argument);
         }
 
         #region BackgroundWorker events
@@ -54,7 +67,8 @@ namespace Specialist_Dashboard
         void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var data_context = new DataContext("epdb01", "JWF_Live");
-            var args = (GetRollsArgument)e.Argument;
+            var args = (GetRollsArgument)e.Argument; 
+            
             if (args.Tab == 0 && !args.ToggleChecked)
             {
                 var rollsReader = new QueuesRollsReader(data_context);
@@ -72,21 +86,41 @@ namespace Specialist_Dashboard
             }
         }
 
+        void InfoBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var args = (GetRollsArgument)e.Argument; 
+            if (args.Tab == 2)
+            {
+                var rollCounter = new RollsCounter();
+                DoWorkForQueuesNumbers(e, rollCounter);
+            }
+        }
+
         private int _rollBatchSizeQueue = 200;
         private int _rollBatchSizeRolls = 600;
         void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (tabControl.SelectedIndex == 0 && Convert.ToBoolean(!rollsToggleBtn.IsChecked))
+            var arg = (GetRollsArgument)e.Result;
+            if (arg.Tab == 0 && Convert.ToBoolean(!rollsToggleBtn.IsChecked))
             {
                 QueuesRollsThreadDisplay(e);
             }
-            else if (tabControl.SelectedIndex == 0 && Convert.ToBoolean(rollsToggleBtn.IsChecked))
+            else if (arg.Tab == 0 && Convert.ToBoolean(rollsToggleBtn.IsChecked))
             {
                 SpecialistRollsThreadDisplay(e);
             }
-            else if (tabControl.SelectedIndex == 1)
+            else if (arg.Tab == 1)
             {
                 NumbersThreadDisplay(e);
+            }
+        }
+
+        void InfoBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            var arg = (GetRollsArgument)e.Result;
+            if (arg.Tab == 2)
+            {
+                QueuesNumbersThreadDisplay(e);
             }
         }
 
@@ -102,7 +136,8 @@ namespace Specialist_Dashboard
                         args.Project,
                         args.Roll);
 
-            e.Result = rolls;
+            args.Rolls = rolls;
+            e.Result = args;
         }
 
         private static void DoWorkForSpecialistRolls(DoWorkEventArgs e, SpecialistRollsReader rollsReader)
@@ -116,7 +151,8 @@ namespace Specialist_Dashboard
                         args.Step,
                         args.Roll);
 
-            e.Result = rolls;
+            args.Rolls = rolls;
+            e.Result = args;
         }
 
         private static void DoWorkForNumbers(DoWorkEventArgs e, DailyNumbersReader numbersReader)
@@ -125,14 +161,39 @@ namespace Specialist_Dashboard
 
             var numList = numbersReader.GetNumbers(args.Specialist, args.Step);
 
-            e.Result = numList;
+            args.RollNumbers = numList;
+            e.Result = args;
+        }
+
+        private static void DoWorkForQueuesNumbers(DoWorkEventArgs e, RollsCounter rollsCounter)
+        {
+            var args = (GetRollsArgument)e.Argument;
+            var queuesNums = rollsCounter.GetQueueNumbers(args.Project);
+
+            var usedSpaceFinder = new DriveSpaceFinder();
+
+            var scanningDiskSpace = usedSpaceFinder.NetDriveSpaceFinder(@"\\dpfs02\scanning");
+            queuesNums.ScanningUsed = scanningDiskSpace.UsedSpace;
+            queuesNums.ScanningTotal = scanningDiskSpace.TotalSpace;
+
+            var imagingDiskSpace = usedSpaceFinder.NetDriveSpaceFinder(@"\\dpfs02\imaging");
+            queuesNums.ImagingUsed = imagingDiskSpace.UsedSpace;
+            queuesNums.ImagingTotal = imagingDiskSpace.TotalSpace;
+
+            var stagingDiskSpace = usedSpaceFinder.NetDriveSpaceFinder(@"\\dpfs01\staging");
+            queuesNums.StagingUsed = stagingDiskSpace.UsedSpace;
+            queuesNums.StagingTotal = stagingDiskSpace.TotalSpace;
+
+            args.QueueNumbers = queuesNums;
+            e.Result = args;
         }
 
         private void QueuesRollsThreadDisplay(RunWorkerCompletedEventArgs e)
         {
-            if (e.Result != null)
+            var arg = (GetRollsArgument)e.Result;
+            if (arg.Rolls != null)
             {
-                var rolls = (IEnumerable<Roll>)e.Result;
+                var rolls = (IEnumerable<Roll>)arg.Rolls;
                 if (RollsTabQueuesControl.QueuesRolls != null)
                     RollsTabQueuesControl.QueuesRolls.Clear();
                 foreach (var roll in rolls.Take(_rollBatchSizeQueue))
@@ -157,14 +218,16 @@ namespace Specialist_Dashboard
                 var rolls = new List<Roll>();
                 PopulateListView(RollsTabQueuesControl.queuesLv, rolls, RollsTabQueuesControl.emptyTxtBlck, false);
             }
-            LoadingProgressRing.IsActive = false;
+            WorkingDisplay(LoadingProgressRing, false);
+            rollsToggleBtn.IsEnabled = true;
         }
 
         private void SpecialistRollsThreadDisplay(RunWorkerCompletedEventArgs e)
         {
-            if (e.Result != null)
+            var arg = (GetRollsArgument)e.Result;
+            if (arg.Rolls != null)
             {
-                var rolls = (IEnumerable<Roll>)e.Result;
+                var rolls = (IEnumerable<Roll>)arg.Rolls;
                 if (RollsTabRollsControl.Rolls != null)
                     RollsTabRollsControl.Rolls.Clear();
                 foreach (var roll in rolls.Take(_rollBatchSizeRolls))
@@ -189,14 +252,16 @@ namespace Specialist_Dashboard
                 var rolls = new List<Roll>();
                 PopulateListView(RollsTabRollsControl.rollsLv, rolls, RollsTabRollsControl.emptyTxtBlck, false);
             }
-            LoadingProgressRing.IsActive = false;
+            WorkingDisplay(LoadingProgressRing, false);
+            rollsToggleBtn.IsEnabled = true;
         }
 
         private void NumbersThreadDisplay(RunWorkerCompletedEventArgs e)
         {
-            if (e.Result != null)
+            var arg = (GetRollsArgument)e.Result;
+            if (arg.RollNumbers != null)
             {
-                var numbers = (List<RollNumbers>)e.Result;
+                var numbers = (List<RollNumbers>)arg.RollNumbers;
                 int images = 0;
                 double imgsPerHour = 0;
                 int seconds = 0;
@@ -218,7 +283,47 @@ namespace Specialist_Dashboard
             }
             else emptyTxtBlck.Visibility = Visibility.Visible;
 
-            LoadingProgressRing.IsActive = false;
+            WorkingDisplay(NumbersLoadingProgressRing, false);
+        }
+
+        private void QueuesNumbersThreadDisplay(RunWorkerCompletedEventArgs e)
+        {
+            var arg = (GetRollsArgument)e.Result;
+            if (arg.QueueNumbers != null)
+            {
+                var queuesNums = (QueueNumbers)arg.QueueNumbers;
+                ScanLbl.Content = queuesNums.Scan;
+                FramingLbl.Content = queuesNums.Framing;
+                MekelExtractingLbl.Content = queuesNums.MekelExtracting;
+                BatchValidatingLbl.Content = queuesNums.BatchValidating;
+                ImgProcLbl.Content = queuesNums.ImageProcessing;
+                QALbl.Content = queuesNums.ImageQA;
+                QELbl.Content = queuesNums.ImageQE;
+                GridlinesLbl.Content = queuesNums.GridlinesQA;
+
+                ScanningShareProgressBar.Maximum = queuesNums.ScanningTotal;
+                ScanningShareProgressBar.Value = queuesNums.ScanningUsed;
+                ImagingShareProgressBar.Maximum = queuesNums.ImagingTotal;
+                ImagingShareProgressBar.Value = queuesNums.ImagingUsed;
+                StagingShareProgressBar.Maximum = queuesNums.StagingTotal;
+                StagingShareProgressBar.Value = queuesNums.StagingUsed;
+
+                ScanningRatioLbl.Content = String.Format(@"{0:F1}/{1:F1} TB",queuesNums.ScanningUsed, queuesNums.ScanningTotal);
+                ImagingRatioLbl.Content = String.Format(@"{0:F1}/{1:F1} TB", queuesNums.ImagingUsed, queuesNums.ImagingTotal);
+                StagingRatioLbl.Content = String.Format(@"{0:F1}/{1:F1} TB", queuesNums.StagingUsed, queuesNums.StagingTotal);
+            }
+            else
+            {
+                ScanLbl.Content = "0";
+                FramingLbl.Content = "0";
+                MekelExtractingLbl.Content = "0";
+                BatchValidatingLbl.Content = "0";
+                ImgProcLbl.Content = "0";
+                QALbl.Content = "0";
+                QELbl.Content = "0";
+                GridlinesLbl.Content = "0";
+            }
+            WorkingDisplay(InfoLoadingProgressRing, false);
         }
 
         #endregion
@@ -256,6 +361,25 @@ namespace Specialist_Dashboard
         }
         #endregion
 
+        /// <summary>
+        /// Changes the display while the background worker is working
+        /// </summary>
+        /// <param name="working"></param>
+        private void WorkingDisplay(ProgressRing progressRing, bool working)
+        {
+            if (working)
+            {
+                progressRing.IsActive = true;
+                tabControl.IsEnabled = false;
+                rollsToggleBtn.IsEnabled = false;
+            }
+            else
+            {
+                progressRing.IsActive = false;
+                tabControl.IsEnabled = true;
+                rollsToggleBtn.IsEnabled = true;
+            }
+        }
 
         private void refreshBtn_Click_1(object sender, RoutedEventArgs e)
         {
@@ -263,19 +387,30 @@ namespace Specialist_Dashboard
             {
                 if (rollsToggleBtn.IsChecked == false)
                 {
+                    RollsTabQueuesControl.queuesLv.ItemsSource = null;
+                    RollsTabQueuesControl.queuesLv.Items.Clear();
                     QueuesRollsSearch();
                     return;
                 }
                 else if (rollsToggleBtn.IsChecked == true)
                 {
+                    RollsTabRollsControl.rollsLv.ItemsSource = null;
+                    RollsTabRollsControl.rollsLv.Items.Clear();
                     SpecialistRollsSearch();
                     return;
                 }
             }
             else if (tabControl.SelectedIndex == 1)
             {
+                numbersLv.ItemsSource = null;
+                numbersLv.Items.Clear();
                 NumbersSearch();
                 return;
+            }
+            else if (tabControl.SelectedIndex == 2)
+            {
+                WorkingDisplay(InfoLoadingProgressRing, true);
+                QueuesNumbersInitializer(infoQueueProjectTxt.Text);
             }
         }
 
@@ -288,7 +423,7 @@ namespace Specialist_Dashboard
             var specReader = new SpecialistsReader();
             var spec = specReader.GetSpecialist(System.Security.Principal.WindowsIdentity.GetCurrent().Name);
 
-            LoadingProgressRing.IsActive = true;
+            WorkingDisplay(NumbersLoadingProgressRing, true);
             var arg = new GetRollsArgument(spec,
                     numbersStepComboBox.Text);
 
@@ -318,7 +453,8 @@ namespace Specialist_Dashboard
                 if (maxDate == null)
                     maxDate = System.DateTime.Now;
 
-                LoadingProgressRing.IsActive = true;
+                WorkingDisplay(LoadingProgressRing, true);
+                rollsToggleBtn.IsEnabled = false;
                 var arg = new GetRollsArgument(spec,
                     Convert.ToDateTime(minDate),
                     Convert.ToDateTime(maxDate),
@@ -355,7 +491,8 @@ namespace Specialist_Dashboard
             var project = RollsTabQueuesControl.queueProjectTxt.Text;
             var roll = RollsTabQueuesControl.queueRollTxt.Text;
 
-            LoadingProgressRing.IsActive = true;
+            WorkingDisplay(LoadingProgressRing, true);
+            rollsToggleBtn.IsEnabled = false;
             var arg = new GetRollsArgument(step, st, priority, project, roll, spec);
             this.BackgroundWorker.RunWorkerAsync(arg);
             return;
@@ -606,6 +743,10 @@ namespace Specialist_Dashboard
                 var sortOnImagesPerHour = new SortOnImagesPerHour();
                 NumList.Sort(sortOnImagesPerHour);
                 ReassignListview();
+            }
+            else
+            {
+                return;
             }
         }
 

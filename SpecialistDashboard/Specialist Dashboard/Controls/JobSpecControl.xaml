@@ -64,11 +64,11 @@
             <TabItem Header="Images">
                 <Grid>
                     <Label Content="Root Images:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="373,5,0,0"/>
-                    <Label Content="#" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="485,5,0,0"/>
+                    <Label Name="rootImagesLbl" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="485,5,0,0"/>
                     <Label Content="Processed Images:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="373,31,0,0"/>
-                    <Label Content="#" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="485,31,0,0"/>
+                    <Label Name="imgProcImagesLbl" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="485,31,0,0"/>
                     <Label Content="Indexing Images:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="373,57,0,0"/>
-                    <Label Content="#" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="485,57,0,0"/>
+                    <Label Name="idxImagesLbl" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="485,57,0,0"/>
                     <ListView Name="imgNotesLv" Margin="0,0,363,0" SelectionChanged="ImgNotesLv_SelectionChanged_1" GridViewColumnHeader.Click="GridViewColumn_Click_3">
                         <ListView.View>
                             <GridView>
@@ -83,8 +83,9 @@
                         <FlowDocument />
                     </RichTextBox>
                     <Label x:Name="ImgNoteUpdateTimeLbl" Content="Update Time" HorizontalAlignment="Right" Margin="0,-5,175,0" VerticalAlignment="Top"/>
-                    <Button Name="textGenerate" Content="Note" HorizontalAlignment="Right" Margin="0,131,103,0" VerticalAlignment="Top" Width="62" Click="textGenerate_Click_1" Height="37"/>
-                    <Controls:ToggleSwitch x:Name="FilteredListTS" Header="Filter Notes" HorizontalAlignment="Right" VerticalAlignment="Top" Width="98" Height="55" Click="FilteredListTS_Click_1" Margin="0,113,5,0"/>
+                    <Button Name="textGenerate" Content="All" HorizontalAlignment="Right" Margin="0,0,5,53" VerticalAlignment="Bottom" Width="70" Click="textGenerate_Click_1" Height="37"/>
+                    <Controls:ToggleSwitch x:Name="FilteredListTS" Header="Filter Notes" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="165" Height="56" Click="FilteredListTS_Click_1" Margin="0,0,5,4"/>
+                    <Button Name="currentTextGenerate" Content="Current" HorizontalAlignment="Right" Margin="0,0,75,53" VerticalAlignment="Bottom" Width="95" Click="currentTextGenerate_Click_1" Height="37"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Details">

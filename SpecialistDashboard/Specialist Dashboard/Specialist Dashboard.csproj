@@ -9,11 +9,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Specialist_Dashboard</RootNamespace>
     <AssemblyName>Specialist Dashboard</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <PublishUrl>\\dpfs01\dpsfiler\Imaging\Production_Team\Team_Lead\Reed\Tools\SpecialistDashboard\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
@@ -25,9 +27,12 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>\\dpfs01\dpsfiler\Imaging\Production_Team\Team_Lead\Reed\Tools\SpecialistDashboard\</InstallUrl>
-    <ApplicationRevision>9</ApplicationRevision>
-    <ApplicationVersion>0.0.1.%2a</ApplicationVersion>
+    <ProductName>Specialist Dashboard</ProductName>
+    <PublisherName>Reed Wilson</PublisherName>
+    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationVersion>0.0.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -40,6 +45,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,6 +55,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
@@ -111,23 +118,30 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DailyNumbersReader.cs" />
+    <Compile Include="DriveSettings.cs" />
+    <Compile Include="DriveSpace.cs" />
+    <Compile Include="DriveSpaceFinder.cs" />
     <Compile Include="GetRollsArgument.cs" />
     <Compile Include="History.cs" />
     <Compile Include="HistoryReader.cs" />
     <Compile Include="ImageFileNote.cs" />
     <Compile Include="ImageNote.cs" />
     <Compile Include="ImageNotesReader.cs" />
+    <Compile Include="JobSpecsControlArgument.cs" />
     <Compile Include="MessageAnalyzer.cs" />
     <Compile Include="Note.cs" />
     <Compile Include="NoteFileReader.cs" />
     <Compile Include="NoteReader.cs" />
     <Compile Include="ProjectSpecUpdates.cs" />
+    <Compile Include="QALogReader.cs" />
+    <Compile Include="QueueNumbers.cs" />
     <Compile Include="RollDetails.cs" />
     <Compile Include="JobSpecUpdates.cs" />
     <Compile Include="QueuesRollsReader.cs" />
     <Compile Include="Roll.cs" />
     <Compile Include="RollNumbers.cs" />
     <Compile Include="RollPaths.cs" />
+    <Compile Include="RollsCounter.cs" />
     <Compile Include="SortOnDate.cs" />
     <Compile Include="SortOnHistoryStep.cs" />
     <Compile Include="SortOnImageCount.cs" />
@@ -207,11 +221,6 @@
     <Resource Include="favicon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>

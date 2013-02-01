@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using System.ComponentModel;
 
 namespace Specialist_Dashboard
 {
@@ -29,11 +30,14 @@ namespace Specialist_Dashboard
         public RollPaths MyRollPaths { get; set; }
         public List<ImageNote> FilteredImageNotes { get; set; }
 
+        private BackgroundWorker BackgroundWorker;
+
         public JobSpecControl(Roll roll)
         {
             InitializeComponent();
             
             MyBasicRoll = roll;
+
 
             var nReader = new NoteReader();
             var notes = nReader.GetNotes(MyBasicRoll);
@@ -45,17 +49,17 @@ namespace Specialist_Dashboard
             var iNReader = new ImageNotesReader();
             var imageNotes = iNReader.GetNotes(MyBasicRoll);
 
-            MyRoll = new RollDetails(MyBasicRoll.Id, 
-                MyBasicRoll.ProjectId, 
-                MyBasicRoll.RollName, 
-                MyBasicRoll.Spec, 
-                MyBasicRoll.State, 
-                MyBasicRoll.Step, 
-                MyBasicRoll.LastUpdate, 
-                notes, 
+            MyRoll = new RollDetails(MyBasicRoll.Id,
+                MyBasicRoll.ProjectId,
+                MyBasicRoll.RollName,
+                MyBasicRoll.Spec,
+                MyBasicRoll.State,
+                MyBasicRoll.Step,
+                MyBasicRoll.LastUpdate,
+                notes,
                 histories,
                 imageNotes);
-            
+
             /// <summary>
             /// Sets ListViews Item Sources
             /// </summary>
@@ -77,12 +81,20 @@ namespace Specialist_Dashboard
 
             MyRollPaths = new RollPaths(MyBasicRoll);
             JSUpdates = new JobSpecUpdates(MyBasicRoll, MyRollPaths);
-            autoCropTS.IsChecked = JSUpdates.AutoCrop;
-            if (autoCropTS.IsChecked == false)
-                aggFactorTS.IsEnabled = false;
-            aggFactorTS.IsChecked = JSUpdates.AggressiveFactor;
-            cropPaddingTxt.Text = Convert.ToString(JSUpdates.CropPadding);
-            deskewComboBox.Text = Convert.ToString(JSUpdates.DeskewMaxAngle/100);
+            if (JSUpdates.RootElement != null)
+            {
+                QETabEnabler(true);
+                autoCropTS.IsChecked = JSUpdates.AutoCrop;
+                if (autoCropTS.IsChecked == false)
+                    aggFactorTS.IsEnabled = false;
+                aggFactorTS.IsChecked = JSUpdates.AggressiveFactor;
+                cropPaddingTxt.Text = Convert.ToString(JSUpdates.CropPadding);
+                deskewComboBox.Text = Convert.ToString(JSUpdates.DeskewMaxAngle / 100);
+            }
+            else
+            {
+                QETabEnabler(false);
+            }
 
             if (MyRollPaths.GetRootPath() != null)
             {
@@ -111,6 +123,24 @@ namespace Specialist_Dashboard
                 SiteSuiteHLink.Inlines.Add(MyRollPaths.GetSiteSuitePath());
             }
             SiteSuiteHLink.IsEnabled = PathExists(MyRollPaths.GetSiteSuitePath());
+
+            this.BackgroundWorker = new BackgroundWorker();
+            this.BackgroundWorker.DoWork += BackgroundWorker_DoWork;
+            this.BackgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
+
+            this.BackgroundWorker.RunWorkerAsync();
+        }
+
+        private void QETabEnabler(bool enabled)
+        {
+            autoCropTS.IsEnabled = enabled;
+            aggFactorTS.IsEnabled = enabled;
+            cropPaddingTxt.IsEnabled = enabled;
+            deskewComboBox.IsEnabled = enabled;
+            projectSpecBtn.IsEnabled = enabled;
+            JobSpecBtn.IsEnabled = enabled;
+            allJobSpecsBtn.IsEnabled = enabled;
+            JobSpecOpenHLink.IsEnabled = enabled;
         }
 
         private bool PathExists(string path)
@@ -309,37 +339,40 @@ namespace Specialist_Dashboard
 
         private void textGenerate_Click_1(object sender, RoutedEventArgs e)
         {
-            if (MyRoll.ImageNotes.Count() != 0)
+            if (MyRoll.ImageNotes != null)
             {
-                var mesAnalyzer = new MessageAnalyzer();
-                var categories = mesAnalyzer.Analyze(MyBasicRoll.RollName);
-                var sBuilder = new StringBuilder();
-
-                foreach (var category in categories)
+                if (MyRoll.ImageNotes.Count() != 0)
                 {
-                    if (category.Value.Count > 0)
+                    var mesAnalyzer = new MessageAnalyzer();
+                    var categories = mesAnalyzer.Analyze(MyBasicRoll.RollName);
+                    var sBuilder = new StringBuilder();
+
+                    foreach (var category in categories)
                     {
-                        sBuilder.AppendLine("Images Marked As " + category.Key + ":");
-                        int i = 0;
-                        foreach (var note in category.Value)
+                        if (category.Value.Count > 0)
                         {
-                            sBuilder.Append(note.ImageNum);
-                            if (category.Value.Count > 1)
+                            sBuilder.AppendLine("Images Marked As " + category.Key + ":");
+                            int i = 0;
+                            foreach (var note in category.Value)
                             {
-                                if (i != category.Value.Count - 1)
-                                    sBuilder.Append(", ");
+                                sBuilder.Append(note.ImageNum);
+                                if (category.Value.Count > 1)
+                                {
+                                    if (i != category.Value.Count - 1)
+                                        sBuilder.Append(", ");
+                                }
+                                i++;
                             }
-                            i++;
+                            sBuilder.AppendLine("");
+                            sBuilder.AppendLine("");
                         }
-                        sBuilder.AppendLine("");
-                        sBuilder.AppendLine("");
                     }
+                    var paragraph = new Paragraph();
+                    paragraph.Inlines.Add(new Run(sBuilder.ToString()));
+                    var flowdoc = new FlowDocument();
+                    flowdoc.Blocks.Add(paragraph);
+                    ImgNoteMessageRichTxt.Document = flowdoc;
                 }
-                var paragraph = new Paragraph();
-                paragraph.Inlines.Add(new Run(sBuilder.ToString()));
-                var flowdoc = new FlowDocument();
-                flowdoc.Blocks.Add(paragraph);
-                ImgNoteMessageRichTxt.Document = flowdoc; 
             }
         }
 
@@ -561,8 +594,15 @@ namespace Specialist_Dashboard
                     FilteredImageNotes = new List<ImageNote>();
                     foreach (var note in MyRoll.ImageNotes)
                     {
-                        if (note.NoteMessage.ToLower().Substring(0, 17) != "automated message")
+                        if (note.NoteMessage.Count() > 17)
+                        {
+                            if (note.NoteMessage.ToLower().Substring(0, 17) != "automated message")
+                                FilteredImageNotes.Add(note);
+                        }
+                        else
+                        {
                             FilteredImageNotes.Add(note);
+                        }
                     }
                     imgNotesLv.ItemsSource = null;
                     imgNotesLv.Items.Clear();
@@ -577,5 +617,88 @@ namespace Specialist_Dashboard
             }
 
         }
+
+        private void currentTextGenerate_Click_1(object sender, RoutedEventArgs e)
+        {
+            var logReader = new QALogReader(MyBasicRoll);
+            var images = logReader.GetImages();
+            var sBuilder = new StringBuilder();
+
+            foreach (var category in images)
+            {
+                if (category.Value.Count > 0)
+                {
+                    if (category.Key.ToLower() != "midtonebright")
+                    {
+                        sBuilder.AppendLine("Images Marked As " + category.Key + ":");
+                        int i = 0;
+                        foreach (var image in category.Value)
+                        {
+                            sBuilder.Append(image);
+                            if (category.Value.Count > 1)
+                            {
+                                if (i != category.Value.Count - 1)
+                                    sBuilder.Append(", ");
+                            }
+                            i++;
+                        }
+                        sBuilder.AppendLine("");
+                        sBuilder.AppendLine("");
+                    } 
+                }
+            }
+            var paragraph = new Paragraph();
+            paragraph.Inlines.Add(new Run(sBuilder.ToString()));
+            var flowdoc = new FlowDocument();
+            flowdoc.Blocks.Add(paragraph);
+            ImgNoteMessageRichTxt.Document = flowdoc; 
+        }
+
+        #region BackgroundWorker events
+
+        void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var args = new JobSpecsControlArgument();
+            var rollPaths = new RollPaths(MyBasicRoll);
+            
+            if (Directory.Exists(rollPaths.GetRootImagesPath()))
+	        {
+		        args.RootImages = Directory.GetFiles(rollPaths.GetRootImagesPath()).Count(
+                        p => System.IO.Path.GetExtension(p) == ".jpg" || 
+                            System.IO.Path.GetExtension(p) == ".j2k" || 
+                            System.IO.Path.GetExtension(p) == ".tif"); 
+	        }
+
+            if (Directory.Exists(rollPaths.GetImgProcessPath()))
+            {
+                args.ProcessedImages = Directory.GetFiles(rollPaths.GetImgProcessPath()).Count(
+                    p => System.IO.Path.GetExtension(p) == ".jpg" ||
+                        System.IO.Path.GetExtension(p) == ".j2k" ||
+                        System.IO.Path.GetExtension(p) == ".tif");
+            }
+
+            if (Directory.Exists(rollPaths.GetIdxPath()))
+            {
+                args.IndexingImages = Directory.GetFiles(rollPaths.GetIdxPath()).Count(
+                    p => System.IO.Path.GetExtension(p) == ".jpg" ||
+                        System.IO.Path.GetExtension(p) == ".j2k" ||
+                        System.IO.Path.GetExtension(p) == ".tif");
+            }
+            
+            e.Result = args;
+        }
+
+        void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            var args = (JobSpecsControlArgument)e.Result;
+            rootImagesLbl.Content = args.RootImages;
+            imgProcImagesLbl.Content = args.ProcessedImages;
+            idxImagesLbl.Content = args.IndexingImages;
+        }
+
+        
+
+        #endregion
+
     }
 }
