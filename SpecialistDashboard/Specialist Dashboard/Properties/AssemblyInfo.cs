@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("Specialist Dashboard")]
 [assembly: AssemblyDescription("A dashboard for specialists")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Reed Wilson")]
+[assembly: AssemblyCompany("Ancestry")]
 [assembly: AssemblyProduct("Specialist Dashboard")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
