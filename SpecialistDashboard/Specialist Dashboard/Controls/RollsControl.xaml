@@ -35,7 +35,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <TextBlock Name="emptyTxtBlck" Text="No Results" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15, 85"/>
+        <TextBlock Name="emptyTxtBlck" Text="No Results" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,67,0,0"/>
         <TextBox x:Name="rollRollnameTxt" HorizontalAlignment="Right" Height="23" Margin="0,5,237,0" Controls:TextboxHelper.Watermark="Rollname" Controls:TextboxHelper.ClearTextButton="True" VerticalAlignment="Top" Width="170" RenderTransformOrigin="0.578,2.346" TextElement.Foreground="DimGray" TextAlignment="Left" TabIndex="1"/>
         <ComboBox x:Name="rollStepComboBox" HorizontalAlignment="Right" Margin="0,5,412,0" VerticalAlignment="Top" Width="126" TabIndex="2" IsEditable="True" Height="23" Controls:TextboxHelper.Watermark="Step" TextElement.Foreground="DimGray">
             <ListBoxItem Content="Scan" TextElement.Foreground="DimGray"/>
@@ -48,6 +48,8 @@
             <Image Source="/images/New_rArrow.png"></Image>
         </Button>
         <Controls:TransitioningContentControl x:Name="rollTabCtrlCC" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Hidden" Background="Gray" Transition="LeftTransition" />
-        <Button Name="BackBtn" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,35,10,0" Height="37" Width="37" Visibility="Hidden" Click="BackBtn_Click_2" RenderTransformOrigin="0.432,0.919" />
+        <Button Name="BackBtn" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,35,10,0" Height="37" Width="37" Visibility="Hidden" Click="BackBtn_Click_2" RenderTransformOrigin="0.432,0.919">
+            <Image Source="../images/New_rArrow2.png" Width="13" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,0,0,0" />
+        </Button>
     </Grid>
 </UserControl>

@@ -63,12 +63,12 @@
             </TabItem>
             <TabItem Header="Images">
                 <Grid>
-                    <Label Content="Root Images:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="373,5,0,0"/>
-                    <Label Name="rootImagesLbl" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="485,5,0,0"/>
-                    <Label Content="Processed Images:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="373,31,0,0"/>
-                    <Label Name="imgProcImagesLbl" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="485,31,0,0"/>
-                    <Label Content="Indexing Images:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="373,57,0,0"/>
-                    <Label Name="idxImagesLbl" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="485,57,0,0"/>
+                    <Label Content="Root Images:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,91,0"/>
+                    <Label Name="rootImagesLbl" Content="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,42,0"/>
+                    <Label Content="Processed Images:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,31,63,0"/>
+                    <Label Name="imgProcImagesLbl" Content="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,31,42,0"/>
+                    <Label Content="Indexing Images:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,57,70,0"/>
+                    <Label Name="idxImagesLbl" Content="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,57,42,0"/>
                     <ListView Name="imgNotesLv" Margin="0,0,363,0" SelectionChanged="ImgNotesLv_SelectionChanged_1" GridViewColumnHeader.Click="GridViewColumn_Click_3">
                         <ListView.View>
                             <GridView>

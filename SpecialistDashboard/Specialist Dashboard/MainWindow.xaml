@@ -94,8 +94,8 @@
                         <Label Name="BatchValidatingLbl" Content="0" HorizontalAlignment="Left" Margin="333,67,0,0" VerticalAlignment="Top"/>
                         <Label Name="ImgProcLbl" Content="0" HorizontalAlignment="Left" Margin="333,93,0,0" VerticalAlignment="Top"/>
                         <Label Name="QALbl" Content="0" HorizontalAlignment="Left" Margin="333,119,0,0" VerticalAlignment="Top"/>
-                        <Label Name="QELbl" Content="0" HorizontalAlignment="Left" Margin="445,67,0,0" VerticalAlignment="Top"/>
-                        <Label Name="GridlinesLbl" Content="0" HorizontalAlignment="Left" Margin="445,93,0,0" VerticalAlignment="Top"/>
+                        <Label Name="QELbl" Content="0" HorizontalAlignment="Left" Margin="449,67,0,0" VerticalAlignment="Top"/>
+                        <Label Name="GridlinesLbl" Content="0" HorizontalAlignment="Left" Margin="449,93,0,0" VerticalAlignment="Top"/>
                         <ProgressBar Name="ScanningShareProgressBar" HorizontalAlignment="Left" Margin="245,187,0,0" VerticalAlignment="Top" Width="175" Height="7"/>
                         <ProgressBar Name="ImagingShareProgressBar" HorizontalAlignment="Left" Margin="245,213,0,0" VerticalAlignment="Top" Width="175" Height="7"/>
                         <ProgressBar Name="StagingShareProgressBar" HorizontalAlignment="Left" Margin="245,239,0,0" VerticalAlignment="Top" Width="175" Height="7"/>
@@ -106,6 +106,8 @@
                         <Label Name="ScanningRatioLbl" Content="0/0 TB" HorizontalAlignment="Left" Margin="425,176,0,0" VerticalAlignment="Top"/>
                         <Label Name="ImagingRatioLbl" Content="0/0 TB" HorizontalAlignment="Left" Margin="425,202,0,0" VerticalAlignment="Top"/>
                         <Label Name="StagingRatioLbl" Content="0/0 TB" HorizontalAlignment="Left" Margin="425,227,0,0" VerticalAlignment="Top"/>
+                        <Label x:Name="TotalTitleLbl" Content="Total" HorizontalAlignment="Left" Margin="408,119,0,0" VerticalAlignment="Top"/>
+                        <Label x:Name="TotalLbl" Content="0" HorizontalAlignment="Left" Margin="449,119,0,0" VerticalAlignment="Top"/>
                     </Grid>
                 </TabItem>
                 <!--<TabItem Header="Projects">

@@ -425,10 +425,10 @@ namespace Specialist_Dashboard
             if (MyRoll.Histories != null)
             {
                 GridViewColumnHeader headerClicked = e.OriginalSource as GridViewColumnHeader;
-                string header = headerClicked.Column.Header as string;
 
                 if (headerClicked != null)
                 {
+                    string header = headerClicked.Column.Header as string;
                     if (headerClicked != _lastHeaderClicked)
                     {
                         SortHistoryColumn(header);
@@ -479,10 +479,10 @@ namespace Specialist_Dashboard
             if (MyRoll.Notes != null)
             {
                 GridViewColumnHeader headerClicked = e.OriginalSource as GridViewColumnHeader;
-                string header = headerClicked.Column.Header as string;
 
                 if (headerClicked != null)
                 {
+                    string header = headerClicked.Column.Header as string;
                     if (headerClicked != _lastNoteHeaderClicked)
                     {
                         SortNoteColumn(header);
@@ -533,10 +533,10 @@ namespace Specialist_Dashboard
             if (MyRoll.ImageNotes != null)
             {
                 GridViewColumnHeader headerClicked = e.OriginalSource as GridViewColumnHeader;
-                string header = headerClicked.Column.Header as string;
 
                 if (headerClicked != null)
                 {
+                    string header = headerClicked.Column.Header as string;
                     if (headerClicked != _lastImageNoteHeaderClicked)
                     {
                         SortImageNoteColumn(header);

@@ -93,7 +93,12 @@ namespace Specialist_Dashboard
             MyRoll = myRoll;
             MyRollPaths = myRollPaths;
             JobSpecDataReturn = MyRollPaths.GetJobSpec();
-            JobSpecPath = JobSpecDataReturn + @"\" + MyRoll.ProjectId + @"\" + MyRoll.RollName + ".xml";
+
+            if (File.Exists(JobSpecDataReturn + @"\" + MyRoll.ProjectId + @"\" + MyRoll.RollName + ".xml"))
+                JobSpecPath = JobSpecDataReturn + @"\" + MyRoll.ProjectId + @"\" + MyRoll.RollName + ".xml";
+            else if (File.Exists(JobSpecDataReturn + @"\" + MyRoll.RollName.Substring(0, 5) + @"\" + MyRoll.RollName + ".xml"))
+                JobSpecPath = JobSpecDataReturn + @"\" + MyRoll.RollName.Substring(0, 5) + @"\" + MyRoll.RollName + ".xml";
+
             RefreshRootElement();
 
             if (RootElement != null)

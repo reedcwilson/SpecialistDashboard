@@ -66,21 +66,24 @@ namespace Specialist_Dashboard
 
         void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            var data_context = new DataContext("epdb01", "JWF_Live");
-            var args = (GetRollsArgument)e.Argument; 
+            DataContext data_context;
+            var args = (GetRollsArgument)e.Argument;
             
             if (args.Tab == 0 && !args.ToggleChecked)
             {
+                data_context = new DataContext("epdb01", "JWF_Live"); 
                 var rollsReader = new QueuesRollsReader(data_context);
                 DoWorkForQueuesRolls(e, rollsReader); 
             }
             else if (args.Tab == 0 && args.ToggleChecked)
             {
+                data_context = new DataContext("epdb01", "Dexter_DeeDee"); 
                 var rollsReader = new SpecialistRollsReader(data_context);
                 DoWorkForSpecialistRolls(e, rollsReader);
             }
             else if (args.Tab == 1)
             {
+                data_context = new DataContext("epdb01", "JWF_Live"); 
                 var numbersReader = new DailyNumbersReader();
                 DoWorkForNumbers(e, numbersReader);
             }
@@ -300,6 +303,14 @@ namespace Specialist_Dashboard
                 QALbl.Content = queuesNums.ImageQA;
                 QELbl.Content = queuesNums.ImageQE;
                 GridlinesLbl.Content = queuesNums.GridlinesQA;
+                TotalLbl.Content = queuesNums.Scan +
+                    queuesNums.Framing +
+                    queuesNums.MekelExtracting +
+                    queuesNums.BatchValidating +
+                    queuesNums.ImageProcessing +
+                    queuesNums.ImageQA +
+                    queuesNums.ImageQE +
+                    queuesNums.GridlinesQA;
 
                 ScanningShareProgressBar.Maximum = queuesNums.ScanningTotal;
                 ScanningShareProgressBar.Value = queuesNums.ScanningUsed;
@@ -383,34 +394,37 @@ namespace Specialist_Dashboard
 
         private void refreshBtn_Click_1(object sender, RoutedEventArgs e)
         {
-            if (tabControl.SelectedIndex == 0)
+            if (!this.BackgroundWorker.IsBusy && !this.InfoBackgroundWorker.IsBusy)
             {
-                if (rollsToggleBtn.IsChecked == false)
+                if (tabControl.SelectedIndex == 0)
                 {
-                    RollsTabQueuesControl.queuesLv.ItemsSource = null;
-                    RollsTabQueuesControl.queuesLv.Items.Clear();
-                    QueuesRollsSearch();
+                    if (rollsToggleBtn.IsChecked == false)
+                    {
+                        RollsTabQueuesControl.queuesLv.ItemsSource = null;
+                        RollsTabQueuesControl.queuesLv.Items.Clear();
+                        QueuesRollsSearch();
+                        return;
+                    }
+                    else if (rollsToggleBtn.IsChecked == true)
+                    {
+                        RollsTabRollsControl.rollsLv.ItemsSource = null;
+                        RollsTabRollsControl.rollsLv.Items.Clear();
+                        SpecialistRollsSearch();
+                        return;
+                    }
+                }
+                else if (tabControl.SelectedIndex == 1)
+                {
+                    numbersLv.ItemsSource = null;
+                    numbersLv.Items.Clear();
+                    NumbersSearch();
                     return;
                 }
-                else if (rollsToggleBtn.IsChecked == true)
+                else if (tabControl.SelectedIndex == 2)
                 {
-                    RollsTabRollsControl.rollsLv.ItemsSource = null;
-                    RollsTabRollsControl.rollsLv.Items.Clear();
-                    SpecialistRollsSearch();
-                    return;
-                }
-            }
-            else if (tabControl.SelectedIndex == 1)
-            {
-                numbersLv.ItemsSource = null;
-                numbersLv.Items.Clear();
-                NumbersSearch();
-                return;
-            }
-            else if (tabControl.SelectedIndex == 2)
-            {
-                WorkingDisplay(InfoLoadingProgressRing, true);
-                QueuesNumbersInitializer(infoQueueProjectTxt.Text);
+                    WorkingDisplay(InfoLoadingProgressRing, true);
+                    QueuesNumbersInitializer(infoQueueProjectTxt.Text);
+                } 
             }
         }
 
@@ -438,7 +452,7 @@ namespace Specialist_Dashboard
                 if (RollsTabRollsControl.rollsLv.Items.Count > 0)
                     RollsTabRollsControl.Rolls.Clear();
 
-                var data_context = new DataContext("epdb01", "JWF_Live");
+                var data_context = new DataContext("epdb01", "Dexter_DeeDee");
                 var rollsReader = new SpecialistRollsReader(data_context);
 
                 string user = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
@@ -461,7 +475,7 @@ namespace Specialist_Dashboard
                     RollsTabRollsControl.rollStepComboBox.Text,
                     RollsTabRollsControl.rollRollnameTxt.Text);
 
-                this.BackgroundWorker.RunWorkerAsync(arg);
+                this.BackgroundWorker.RunWorkerAsync(arg); 
             }
             else MessageBox.Show(this, "Please enter a Step", "Filter Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }

@@ -19,7 +19,7 @@ namespace Specialist_Dashboard
         /// <summary>
         /// Returns rolls a specialist scanned/audited in a given time period
         /// </summary>
-        public List<Roll> GetRolls(Specialist user, DateTime min, DateTime max, string step = null, string rollname = null)
+        public List<Roll> GetRolls(Specialist user, DateTime min, DateTime max, string step, string rollname = null)
         {
             //work on making this query faster and more accurate
             string sql = MyRollsSQLString(user, step, rollname);
@@ -30,17 +30,18 @@ namespace Specialist_Dashboard
                 List<Roll> rollList = new List<Roll>();
                 while (reader.Read())
                 {
+                    //var id = reader.GetInt32(0);
                     var i = reader["WorkItemID"];
                     int id = Convert.ToInt32(i);
-                    var pi = reader["ProjectID"];
-                    string pId = Convert.ToString(pi);
+                    string pId = reader["ProjectID"] as string;
+                    //string pId = Convert.ToString(pi);
                     string rName = reader["Rollname"] as string;
-                    string qHist = reader["MyQueue"] as string;
+                    //string qHist = reader["MyQueue"] as string;
                     string qName = reader["CurrentQueue"] as string;
                     string st = reader["State"] as string;
-                    var lUpdate = reader.GetDateTime(6);
+                    var lUpdate = reader.GetDateTime(5);
 
-                    var roll = new RollDetails(id, pId, rName, user, st, qName, qHist, lUpdate);
+                    var roll = new RollDetails(id, pId, rName, user, st, qName, step, lUpdate);
                     rollList.Add(roll);
                 }
                 Data_Context.CloseConnection();
@@ -55,32 +56,32 @@ namespace Specialist_Dashboard
         private string MyRollsSQLString(Specialist user, string step, string rollname)
         {
             string sql = @"SELECT DISTINCT 
-                                            WI.WorkItemID
-                                            ,R.ProjectID
-                                            ,WI.WorkItemName Rollname
-                                            ,Q.QueueName CurrentQueue
-                                            ,WI.State
-                                            ,WIH.CurrentQueue MyQueue
-                                            ,WI.LastUpdateTime
-                                    FROM WorkItem WI (NOLOCK)
-                                        LEFT JOIN Dexter_DeeDee..Roll R (NOLOCK) ON WI.WorkItemName = R.RollName
-                                        LEFT JOIN WorkItemHistory WIH (NOLOCK) ON WI.WorkItemID = WIH.WorkItemID
-                                        LEFT JOIN Queue Q (NOLOCK) ON WI.QueueId = Q.QueueId";
+											WI.WorkItemID
+				                            ,R.RollName Rollname
+                                            ,R.ProjectId
+				                            ,WI.State
+				                            ,Q.QueueName CurrentQueue
+				                            ,WI.LastUpdateTime
+                            FROM Roll R (NOLOCK)
+                            LEFT JOIN RollBatch RB (NOLOCK) ON R.RollID = RB.RollID
+                            LEFT JOIN SOX.DetailedResult DR (NOLOCK) ON RB.RollBatchID = DR.RollBatchID
+                            LEFT JOIN JWF_Live..WorkItem WI (NOLOCK) ON R.RollName = WI.WorkItemName
+                            LEFT JOIN JWF_Live..Queue Q (NOLOCK) ON WI.QueueId = Q.QueueId";
 
                                sql += @" WHERE ";
             if (step != "")
-                               sql += @"          WIH.CurrentQueue = '" + step + "'";
+                               sql += @"          DR.StepTypeID = '" + step + "'";
             
             if (rollname != "" && step != "")
-                               sql += @"      AND WI.WorkItemName LIKE '%" + rollname + "%'";
+                               sql += @"      AND R.RollName LIKE '%" + rollname + "%'";
             else if (rollname != "" && step == "")
-                               sql += @"          WI.WorkItemName LIKE '%" + rollname + "%'";
+                               sql += @"          R.RollName LIKE '%" + rollname + "%'";
             
             if (step != "" || rollname != "")
                                sql += @"      AND ";
-                               sql += @"          WIH.UserName = 'myfamily\" + user.Username + "'";
-                               sql += @"      AND WIH.MessageDate BETWEEN CONVERT(DATETIME, @min) AND CONVERT(DATETIME, @max)
-                                        ORDER BY WI.WorkItemName";
+                               sql += @"          DR.Operator = 'myfamily\" + user.Username + "'";
+                               sql += @"      AND DR.LastDocDate BETWEEN CONVERT(DATETIME, @min) AND CONVERT(DATETIME, @max)
+                                        ORDER BY R.RollName";
 
             return sql;
         }

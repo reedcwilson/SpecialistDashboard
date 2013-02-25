@@ -15,6 +15,7 @@ namespace Specialist_Dashboard
         public string Server { get; set; }
         public string Database { get; set; }
 
+        public DataContext() { }
         public DataContext(string server, string database)
         {
             //p = "Data Source=MyDatabase.sqlite;Version=3;";

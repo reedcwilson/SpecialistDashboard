@@ -91,7 +91,7 @@ namespace Specialist_Dashboard
                 tab.Header = QueuesRolls[queuesLv.SelectedIndex].RollName;
                 foreach (TabItem t in DetailsTabControl.Items)
                 {
-                    if (t.Header == tab.Header)
+                    if (Convert.ToString(t.Header) == Convert.ToString(tab.Header))
                     {
                         newTab = false;
                         break;
@@ -133,33 +133,36 @@ namespace Specialist_Dashboard
             {
                 GridViewColumnHeader headerClicked = e.OriginalSource as GridViewColumnHeader;
 
-                if (headerClicked.Column != null)
+                if (headerClicked != null)
                 {
-                    string header = headerClicked.Column.Header as string;
-
-                    if (headerClicked != null)
+                    if (headerClicked.Column != null)
                     {
-                        if (headerClicked != _lastHeaderClicked)
+                        string header = headerClicked.Column.Header as string;
+
+                        if (headerClicked != null)
                         {
-                            SortColumn(header);
-                            _lastDirection = 1;
-                        }
-                        else
-                        {
-                            if (_lastDirection == 1)
+                            if (headerClicked != _lastHeaderClicked)
                             {
-                                _lastDirection = -1;
-                                QueuesRolls.Reverse();
-                                ReassignListview();
+                                SortColumn(header);
+                                _lastDirection = 1;
                             }
                             else
                             {
-                                _lastDirection = 1;
-                                SortColumn(header);
+                                if (_lastDirection == 1)
+                                {
+                                    _lastDirection = -1;
+                                    QueuesRolls.Reverse();
+                                    ReassignListview();
+                                }
+                                else
+                                {
+                                    _lastDirection = 1;
+                                    SortColumn(header);
+                                }
                             }
                         }
-                    }
-                    _lastHeaderClicked = headerClicked;    
+                        _lastHeaderClicked = headerClicked;
+                    } 
                 }
             }          
         }

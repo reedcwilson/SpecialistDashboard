@@ -92,7 +92,19 @@ namespace Specialist_Dashboard
             if (rollname != "")
                 sql += @"     AND WI.WorkItemName like '%" + rollname + "%'";
             if (step != "")
-                sql += @"     AND Q.QueueName = '" + step + "'";
+            {
+                if (step.ToLower() == "auditing")
+                {
+                    sql += @" AND (Q.QueueName = 'ImageQA'
+                              OR Q.QueueName = 'ImageQE')";
+                }
+                else if (step.ToLower() == "incomplete")
+                {
+                    sql += @" AND Q.QueueName != 'BatchExporting'";
+                }
+                else
+                    sql += @" AND Q.QueueName = '" + step + "'";
+            }
             if (user != null)
                 sql += @"     AND WI.UserName = 'myfamily\" + user.Username + "'";
             if (priority != "")

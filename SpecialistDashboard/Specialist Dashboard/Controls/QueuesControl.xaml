@@ -57,10 +57,12 @@
             <ListBoxItem Content="ImageProcessing" TextElement.Foreground="DimGray"/>
             <ListBoxItem Content="ImageQA" TextElement.Foreground="DimGray"/>
             <ListBoxItem Content="ImageQE" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="Auditing" TextElement.Foreground="DimGray"/>
             <ListBoxItem Content="FileCopying" TextElement.Foreground="DimGray"/>
             <ListBoxItem Content="ImageConverting" TextElement.Foreground="DimGray"/>
             <ListBoxItem Content="BatchExporting" TextElement.Foreground="DimGray"/>
             <ListBoxItem Content="GridlineQualityAudit" TextElement.Foreground="DimGray"/>
+            <ListBoxItem Content="Incomplete" TextElement.Foreground="DimGray"/>
         </ComboBox>
         <ComboBox x:Name="userComboBox" Controls:TextboxHelper.Watermark="User" Margin="0,33,380,0" VerticalAlignment="Top" Width="160" HorizontalAlignment="Right" TabIndex="3" IsEditable="True" Height="23" ItemsSource="{Binding SpecialistName}" TextElement.Foreground="DimGray">
         </ComboBox>
@@ -75,11 +77,13 @@
         <Button Name="ShowDetailsBtn" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,0,0" Height="54" IsEnabled="False" Width="18" Click="ShowDetailsBtn_Click_1">
             <Button.Content>
                 <StackPanel>
-                    <Image Source="/images/New_rArrow.png"></Image>
+                    <Image Source="/images/New_rArrow2.png"></Image>
                 </StackPanel>
             </Button.Content>
         </Button>
         <Controls:TransitioningContentControl x:Name="rollTabCtrlCC" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Hidden" Background="Gray" Transition="LeftTransition" />
-        <Button Name="BackBtn" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,35,10,0" Height="37" Width="37" Visibility="Hidden" Click="BackBtn_Click_2" />
+        <Button Name="BackBtn" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,35,10,0" Height="37" Width="37" Visibility="Hidden" Click="BackBtn_Click_2">
+            <Image Source="../images/New_rArrow2.png" Width="13" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,0,0,0" />
+        </Button>
     </Grid>
 </UserControl>
