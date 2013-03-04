@@ -34,7 +34,7 @@ namespace Specialist_Dashboard
             string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
             foreach (var auditor in QEAuditors)
             {
-                if (auditor == userName)
+                if (@"myfamily\" + auditor == userName.ToLower())
                     return true;
             }
             return false;
@@ -45,7 +45,7 @@ namespace Specialist_Dashboard
             string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
             foreach (var specialist in Supervisors)
             {
-                if (specialist == userName)
+                if (@"myfamily\" + specialist == userName.ToLower())
                     return true;
             }
             return false;

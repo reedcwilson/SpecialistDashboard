@@ -4002,7 +4002,7 @@
 		<col def="V0">Data</col>
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I2">ISIconIndex</col>
-		<row><td>ARPPRODUCTICON.exe</td><td/><td>C:\Users\reed.wilson\Desktop\SpecialistDashboard\Specialist Dashboard\favicon.ico</td><td>0</td></row>
+		<row><td>ARPPRODUCTICON.exe</td><td/><td>C:\Users\reed.wilson\Documents\GitHub\SpecialistDashboard\SpecialistDashboard\Specialist Dashboard\favicon.ico</td><td>0</td></row>
 		<row><td>NewShortcut3_2361CBA2520F459592A909752CC658E6.exe</td><td/><td>C:\Users\reed.wilson\Documents\GitHub\SpecialistDashboard\SpecialistDashboard\Specialist Dashboard\bin\Release\Specialist Dashboard.exe</td><td>0</td></row>
 		<row><td>NewShortcut4_28E0F062FC604CABB38AEF0FEC687DBC.exe</td><td/><td>C:\Users\reed.wilson\Documents\GitHub\SpecialistDashboard\SpecialistDashboard\Specialist Dashboard\bin\Release\Specialist Dashboard.exe</td><td>0</td></row>
 	</table>
