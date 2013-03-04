@@ -84,6 +84,11 @@ namespace Specialist_Dashboard
             if (JSUpdates.RootElement != null)
             {
                 QETabEnabler(true);
+                if (!SpecialistValidator.ValidateAuditor())
+                {
+                    JobSpecOpenHLink.Inlines.Clear();
+                    JobSpecOpenHLink.Inlines.Add("View");
+                }
                 autoCropTS.IsChecked = JSUpdates.AutoCrop;
                 if (autoCropTS.IsChecked == false)
                     aggFactorTS.IsEnabled = false;
@@ -109,6 +114,7 @@ namespace Specialist_Dashboard
                 ImgProcHLink.Inlines.Add(MyRollPaths.GetImgProcessPath());
             }
             ImgProcHLink.IsEnabled = PathExists(MyRollPaths.GetImgProcessPath());
+            currentTextGenerate.IsEnabled = PathExists(MyRollPaths.GetImgProcessPath());
 
             if (MyRollPaths.GetIdxPath() != null)
             {
@@ -133,14 +139,21 @@ namespace Specialist_Dashboard
 
         private void QETabEnabler(bool enabled)
         {
-            autoCropTS.IsEnabled = enabled;
-            aggFactorTS.IsEnabled = enabled;
-            cropPaddingTxt.IsEnabled = enabled;
-            deskewComboBox.IsEnabled = enabled;
-            projectSpecBtn.IsEnabled = enabled;
-            JobSpecBtn.IsEnabled = enabled;
-            allJobSpecsBtn.IsEnabled = enabled;
+            bool validAuditor = SpecialistValidator.ValidateAuditor();
+            bool validSupervisor = SpecialistValidator.ValidateSupervisor();
+            autoCropTS.IsEnabled = enabled && validAuditor;
+            aggFactorTS.IsEnabled = enabled && validAuditor;
+            cropPaddingTxt.IsEnabled = enabled && validAuditor;
+            deskewComboBox.IsEnabled = enabled && validAuditor;
+            projectSpecBtn.IsEnabled = enabled && validSupervisor;
+            JobSpecBtn.IsEnabled = enabled && validAuditor;
+            allJobSpecsBtn.IsEnabled = enabled && validSupervisor;
             JobSpecOpenHLink.IsEnabled = enabled;
+
+            qeTrainingLinkLbl.IsEnabled = validAuditor;
+            projectDefectsLinkLbl.IsEnabled = validAuditor;
+            defectLogLinkLbl.IsEnabled = validAuditor;
+            projectChangesLinkLbl.IsEnabled = validAuditor;
         }
 
         private bool PathExists(string path)
@@ -380,7 +393,10 @@ namespace Specialist_Dashboard
         {
             try
             {
-                System.Diagnostics.Process.Start("notepad.exe", MyRollPaths.JobSpec);
+                if (SpecialistValidator.ValidateAuditor())
+                    System.Diagnostics.Process.Start("notepad.exe", MyRollPaths.JobSpec);
+                else
+                    System.Diagnostics.Process.Start(MyRollPaths.JobSpec);
             }
             catch (Exception ex)
             {
@@ -622,36 +638,41 @@ namespace Specialist_Dashboard
         {
             var logReader = new QALogReader(MyBasicRoll);
             var images = logReader.GetImages();
-            var sBuilder = new StringBuilder();
-
-            foreach (var category in images)
+            if (images != null)
             {
-                if (category.Value.Count > 0)
+                var sBuilder = new StringBuilder();
+
+                foreach (var category in images)
                 {
-                    if (category.Key.ToLower() != "midtonebright")
+                    if (category.Value.Count > 0)
                     {
-                        sBuilder.AppendLine("Images Marked As " + category.Key + ":");
-                        int i = 0;
-                        foreach (var image in category.Value)
+                        if (category.Key.ToLower() != "midtonebright")
                         {
-                            sBuilder.Append(image);
-                            if (category.Value.Count > 1)
+                            sBuilder.AppendLine("Images Marked As " + category.Key + ":");
+                            int i = 0;
+                            foreach (var image in category.Value)
                             {
-                                if (i != category.Value.Count - 1)
-                                    sBuilder.Append(", ");
+                                sBuilder.Append(image);
+                                if (category.Value.Count > 1)
+                                {
+                                    if (i != category.Value.Count - 1)
+                                        sBuilder.Append(", ");
+                                }
+                                i++;
                             }
-                            i++;
+                            sBuilder.AppendLine("");
+                            sBuilder.AppendLine("");
                         }
-                        sBuilder.AppendLine("");
-                        sBuilder.AppendLine("");
-                    } 
+                    }
                 }
+                var paragraph = new Paragraph();
+                paragraph.Inlines.Add(new Run(sBuilder.ToString()));
+                var flowdoc = new FlowDocument();
+                flowdoc.Blocks.Add(paragraph);
+                ImgNoteMessageRichTxt.Document = flowdoc;
             }
-            var paragraph = new Paragraph();
-            paragraph.Inlines.Add(new Run(sBuilder.ToString()));
-            var flowdoc = new FlowDocument();
-            flowdoc.Blocks.Add(paragraph);
-            ImgNoteMessageRichTxt.Document = flowdoc; 
+            else
+                MessageBox.Show("QA Log not found", "File Not Found", MessageBoxButton.OK, MessageBoxImage.Exclamation, MessageBoxResult.OK);
         }
 
         #region BackgroundWorker events

@@ -19,12 +19,16 @@ namespace Specialist_Dashboard
         {
             Data_Context = new DataContext("epdb01", "jwf_live");
             MyRoll = roll;
-            JobSpec = GetJobSpec() + @"\" + MyRoll.ProjectId + @"\" + MyRoll.RollName + ".xml";
-            //string jobSpecPath = JobSpec + @"\" + MyRoll.ProjectId + @"\" + MyRoll.RollName + ".xml";
-            if (File.Exists(JobSpec)) RootElement = XElement.Load(JobSpec);
+            
+            if (File.Exists(GetJobSpec() + @"\" + MyRoll.ProjectId + @"\" + MyRoll.RollName + ".xml"))
+            {
+                JobSpec = GetJobSpec() + @"\" + MyRoll.ProjectId + @"\" + MyRoll.RollName + ".xml";
+                RootElement = XElement.Load(JobSpec);
+            }
             else if (File.Exists(GetJobSpec() + @"\" + MyRoll.RollName.Substring(0, 5) + @"\" + MyRoll.RollName + ".xml"))
             {
-                RootElement = XElement.Load(GetJobSpec() + @"\" + MyRoll.RollName.Substring(0, 5) + @"\" + MyRoll.RollName + ".xml");
+                JobSpec = GetJobSpec() + @"\" + MyRoll.RollName.Substring(0, 5) + @"\" + MyRoll.RollName + ".xml";
+                RootElement = XElement.Load(JobSpec);
             }
         }
 

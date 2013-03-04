@@ -157,6 +157,7 @@
     <Compile Include="SpecialistNumbers.cs" />
     <Compile Include="SpecialistRollsReader.cs" />
     <Compile Include="SpecialistsReader.cs" />
+    <Compile Include="SpecialistValidator.cs" />
     <Page Include="Controls\JobSpecControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

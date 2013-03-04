@@ -173,21 +173,24 @@ namespace Specialist_Dashboard
             var args = (GetRollsArgument)e.Argument;
             var queuesNums = rollsCounter.GetQueueNumbers(args.Project);
 
-            var usedSpaceFinder = new DriveSpaceFinder();
+            if (queuesNums != null)
+            {
+                var usedSpaceFinder = new DriveSpaceFinder();
 
-            var scanningDiskSpace = usedSpaceFinder.NetDriveSpaceFinder(@"\\dpfs02\scanning");
-            queuesNums.ScanningUsed = scanningDiskSpace.UsedSpace;
-            queuesNums.ScanningTotal = scanningDiskSpace.TotalSpace;
+                var scanningDiskSpace = usedSpaceFinder.NetDriveSpaceFinder(@"\\dpfs02\scanning");
+                queuesNums.ScanningUsed = scanningDiskSpace.UsedSpace;
+                queuesNums.ScanningTotal = scanningDiskSpace.TotalSpace;
 
-            var imagingDiskSpace = usedSpaceFinder.NetDriveSpaceFinder(@"\\dpfs02\imaging");
-            queuesNums.ImagingUsed = imagingDiskSpace.UsedSpace;
-            queuesNums.ImagingTotal = imagingDiskSpace.TotalSpace;
+                var imagingDiskSpace = usedSpaceFinder.NetDriveSpaceFinder(@"\\dpfs02\imaging");
+                queuesNums.ImagingUsed = imagingDiskSpace.UsedSpace;
+                queuesNums.ImagingTotal = imagingDiskSpace.TotalSpace;
 
-            var stagingDiskSpace = usedSpaceFinder.NetDriveSpaceFinder(@"\\dpfs01\staging");
-            queuesNums.StagingUsed = stagingDiskSpace.UsedSpace;
-            queuesNums.StagingTotal = stagingDiskSpace.TotalSpace;
+                var stagingDiskSpace = usedSpaceFinder.NetDriveSpaceFinder(@"\\dpfs01\staging");
+                queuesNums.StagingUsed = stagingDiskSpace.UsedSpace;
+                queuesNums.StagingTotal = stagingDiskSpace.TotalSpace;
 
-            args.QueueNumbers = queuesNums;
+                args.QueueNumbers = queuesNums; 
+            }
             e.Result = args;
         }
 
@@ -333,6 +336,7 @@ namespace Specialist_Dashboard
                 QALbl.Content = "0";
                 QELbl.Content = "0";
                 GridlinesLbl.Content = "0";
+                TotalLbl.Content = "0";
             }
             WorkingDisplay(InfoLoadingProgressRing, false);
         }
