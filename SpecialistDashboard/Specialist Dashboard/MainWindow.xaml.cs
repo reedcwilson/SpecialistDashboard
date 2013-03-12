@@ -361,8 +361,7 @@ namespace Specialist_Dashboard
             else if (sender == auditPrioritiesLinkLbl)
                 System.Diagnostics.Process.Start("http://dpsystems/support/wiki/KnowledgeBase/Imaging/GeneralHelp/PrioritiesAndInstructionsForSpecialists");
             else if (sender == projectInstLinkLbl)
-                //    System.Diagnostics.Process.Start("");
-                MessageBox.Show("Tell Sam or Miranda to make a project instructions wiki page");
+                System.Diagnostics.Process.Start("http://dpsystems/support/wiki/KnowledgeBase/Imaging/GeneralHelp/Projects");
             else if (sender == shiftReplacementLinkLbl)
                 System.Diagnostics.Process.Start("http://intranet/teams/dp/imaging/Lists/Shift%20Replacement/Open.aspx");
             else if (sender == scanShareLinkLbl)
@@ -477,7 +476,7 @@ namespace Specialist_Dashboard
                     Convert.ToDateTime(minDate),
                     Convert.ToDateTime(maxDate),
                     RollsTabRollsControl.rollStepComboBox.Text,
-                    RollsTabRollsControl.rollRollnameTxt.Text);
+                    RollsTabRollsControl.rollRollnameTxt.Text.TrimEnd());
 
                 this.BackgroundWorker.RunWorkerAsync(arg); 
             }
@@ -506,8 +505,8 @@ namespace Specialist_Dashboard
             var step = RollsTabQueuesControl.stepComboBox.Text;
             var st = RollsTabQueuesControl.stateComboBox.Text;
             var priority = RollsTabQueuesControl.priorityComboBox.Text;
-            var project = RollsTabQueuesControl.queueProjectTxt.Text;
-            var roll = RollsTabQueuesControl.queueRollTxt.Text;
+            var project = RollsTabQueuesControl.queueProjectTxt.Text.TrimEnd();
+            var roll = RollsTabQueuesControl.queueRollTxt.Text.TrimEnd();
 
             WorkingDisplay(LoadingProgressRing, true);
             rollsToggleBtn.IsEnabled = false;

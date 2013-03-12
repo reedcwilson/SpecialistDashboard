@@ -154,6 +154,9 @@ namespace Specialist_Dashboard
             projectDefectsLinkLbl.IsEnabled = validAuditor;
             defectLogLinkLbl.IsEnabled = validAuditor;
             projectChangesLinkLbl.IsEnabled = validAuditor;
+
+            if (!validAuditor)
+                QADefectTxtBlock.Visibility = Visibility.Hidden;
         }
 
         private bool PathExists(string path)
@@ -183,7 +186,7 @@ namespace Specialist_Dashboard
             else if (sender == projectDefectsLinkLbl)
                 System.Diagnostics.Process.Start(@"\\dpfs01\dpsfiler\Imaging\Production_Team\Project Defect Logs");
             else if (sender == defectLogLinkLbl)
-                System.Diagnostics.Process.Start(@"\\dpfs01\dpsfiler\Imaging\Production_Team\Supervisors\QA_Defects_Log.xlsx");
+                System.Diagnostics.Process.Start(@"\\dpfs01\dpsfiler\Imaging\Production_Team\Supervisors\QA_Defects_Log.xlsm");
         }
 
         private void HighlightText_GotKeyboardFocus(Object sender, KeyboardFocusChangedEventArgs e)
@@ -720,6 +723,24 @@ namespace Specialist_Dashboard
         
 
         #endregion
+
+        private void AuditorTextGenerateLink_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (historyLv.Items.Count > 0)
+            {
+                string message = MyRoll.Histories[historyLv.SelectedIndex].Message.ToLower();
+                string pOrF;
+                if (message.Contains("passedaudit"))
+                    pOrF = "P";
+                else
+                    pOrF = "F";
+
+                DateTime date = MyRoll.Histories[historyLv.SelectedIndex].Date;
+                string username = MyRoll.Histories[historyLv.SelectedIndex].Spec.Username;
+
+                Clipboard.SetText(date + "\t\t" + username +"\t\t\t" + pOrF);
+            }
+        }
 
     }
 }
