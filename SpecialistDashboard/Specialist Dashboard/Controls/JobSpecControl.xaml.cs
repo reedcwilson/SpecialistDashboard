@@ -75,6 +75,11 @@ namespace Specialist_Dashboard
             notesLv.ItemsSource = MyRoll.Notes;
             imgNotesLv.ItemsSource = MyRoll.ImageNotes;
 
+            if (MyRoll.ImageNotes == null || MyRoll.ImageNotes.Count == 0)
+                FilteredListTS.IsEnabled = false;
+            else
+                FilteredListTS.IsEnabled = true;
+
             /// <summary>
             /// Sets the values for QE tab
             /// </summary>
@@ -626,7 +631,7 @@ namespace Specialist_Dashboard
         {
             if (Convert.ToBoolean(FilteredListTS.IsChecked))
             {
-                if (MyRoll.ImageNotes.Count != 0)
+                if (MyRoll.ImageNotes != null && MyRoll.ImageNotes.Count != 0)
                 {
                     FilteredImageNotes = new List<ImageNote>();
                     foreach (var note in MyRoll.ImageNotes)
