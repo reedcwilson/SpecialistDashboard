@@ -4516,7 +4516,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]Specialist Dashboard.exe</td><td/></row>
 		<row><td>ProductCode</td><td>{4BE4BC95-10BC-414A-9224-C8E24156FFB0}</td><td/></row>
 		<row><td>ProductName</td><td>Specialist Dashboard</td><td/></row>
-		<row><td>ProductVersion</td><td>1.00.0004</td><td/></row>
+		<row><td>ProductVersion</td><td>1.00.0006</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>

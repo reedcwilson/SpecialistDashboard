@@ -27,12 +27,15 @@ namespace Specialist_Dashboard
             {
                 string text = File.ReadAllText(qALog);
 
-                var matches = Regex.Matches(text, @"(_|-)(\d{5})\..*=(\w+)")
+                // 42091_327600-00019.j2k=Other
+                // 42092_2421406263_1204-00021-L00010.j2k=Deskew
+                // -?\w+?
+                var matches = Regex.Matches(text, @"(_|-)(\d{5})(-[LR]\d{5})?\..*=(\w+)")
                     .Cast<Match>();
 
                 foreach (var match in matches)
                 {
-                    var key = match.Groups[3].Value;
+                    var key = match.Groups[4].Value;
                     var number = int.Parse(match.Groups[2].Value);
                     if (Images.ContainsKey(key))
                         Images[key].Add(number.ToString());

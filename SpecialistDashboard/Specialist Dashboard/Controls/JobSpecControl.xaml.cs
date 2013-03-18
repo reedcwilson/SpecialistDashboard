@@ -89,7 +89,12 @@ namespace Specialist_Dashboard
                     JobSpecOpenHLink.Inlines.Clear();
                     JobSpecOpenHLink.Inlines.Add("View");
                 }
-                autoCropTS.IsChecked = JSUpdates.AutoCrop;
+
+                if (JSUpdates.AutoCropExists == false)
+                    autoCropTS.IsEnabled = false;
+                else
+                    autoCropTS.IsChecked = JSUpdates.AutoCrop;
+
                 if (autoCropTS.IsChecked == false)
                     aggFactorTS.IsEnabled = false;
                 aggFactorTS.IsChecked = JSUpdates.AggressiveFactor;

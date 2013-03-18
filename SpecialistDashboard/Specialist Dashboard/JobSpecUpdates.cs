@@ -17,6 +17,7 @@ namespace Specialist_Dashboard
         public Roll MyRoll { get; set; }
         public RollPaths MyRollPaths { get; set; }
         public string JobSpecDataReturn { get; set; }
+        public bool AutoCropExists { get; set; }
 
         private bool _autoCrop;
         public bool AutoCrop
@@ -27,11 +28,23 @@ namespace Specialist_Dashboard
             }
             set
             {
-                RefreshRootElement();
-                _autoCrop = value;
-                RootElement.Element("Roll").Element("ImageProcessing").Element("ProcessSequence").Element("AutoCrop").Attribute("xDirection").SetValue(_autoCrop);
-                RootElement.Element("Roll").Element("ImageProcessing").Element("ProcessSequence").Element("AutoCrop").Attribute("yDirection").SetValue(_autoCrop);
-                RootElement.Save(JobSpecPath);
+                if (RootElement.Descendants("Roll")
+                                .Where(roll => roll.Elements("ImageProcessing").Any()).Any())
+                {
+                    if (RootElement.Element("Roll").Descendants("ImageProcessing")
+                                .Where(roll => roll.Elements("ProcessSequence").Any()).Any())
+                    {
+                        if (RootElement.Element("Roll").Element("ImageProcessing").Descendants("ProcessSequence")
+                                .Where(roll => roll.Elements("AutoCrop").Any()).Any())
+                        {
+                            RefreshRootElement();
+                            _autoCrop = value;
+                            RootElement.Element("Roll").Element("ImageProcessing").Element("ProcessSequence").Element("AutoCrop").Attribute("xDirection").SetValue(_autoCrop);
+                            RootElement.Element("Roll").Element("ImageProcessing").Element("ProcessSequence").Element("AutoCrop").Attribute("yDirection").SetValue(_autoCrop);
+                            RootElement.Save(JobSpecPath);
+                        }
+                    }
+                }
             }
         }
 
@@ -109,12 +122,19 @@ namespace Specialist_Dashboard
                     if (RootElement.Element("Roll").Descendants("ImageProcessing")
                             .Where(roll => roll.Elements("ProcessSequence").Any()).Any())
                     {
-                        AutoCropElement = RootElement.Element("Roll").Element("ImageProcessing").Element("ProcessSequence").Element("AutoCrop");
+                        if (RootElement.Element("Roll").Element("ImageProcessing").Descendants("ProcessSequence")
+                                .Where(roll => roll.Elements("AutoCrop").Any()).Any())
+                        {
+                            AutoCropElement = RootElement.Element("Roll").Element("ImageProcessing").Element("ProcessSequence").Element("AutoCrop");
+                            AutoCropExists = true;
+                        }
+                        else
+                            AutoCropExists = false;
+
                         DeskewElement = RootElement.Element("Roll").Element("ImageProcessing").Element("ProcessSequence").Element("Deskew");
                     }
                 }
-
-
+                
                 if (AutoCropElement != null)
                 {
                     if (AutoCropElement.Attribute("xDirection").Value == "true" && AutoCropElement.Attribute("yDirection").Value == "true")
