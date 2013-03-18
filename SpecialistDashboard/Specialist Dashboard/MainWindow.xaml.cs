@@ -357,11 +357,11 @@ namespace Specialist_Dashboard
         private void LinkLbl_MouseLeftButtonUp_1(object sender, MouseButtonEventArgs e)
         {
             if (sender == rollNoteLinkLbl)
-                System.Diagnostics.Process.Start("http://dpsystems/support/wiki/KnowledgeBase/Imaging/GeneralHelp/Roll%20Notes");
+                System.Diagnostics.Process.Start("http://dpsystems/support/wiki/KnowledgeBase/Imaging/Quick/Roll_Note_Templates");
             else if (sender == auditPrioritiesLinkLbl)
-                System.Diagnostics.Process.Start("http://dpsystems/support/wiki/KnowledgeBase/Imaging/GeneralHelp/PrioritiesAndInstructionsForSpecialists");
+                System.Diagnostics.Process.Start("http://dpsystems/support/wiki/KnowledgeBase/Imaging/ProjectsAndPriorities/Priorities");
             else if (sender == projectInstLinkLbl)
-                System.Diagnostics.Process.Start("http://dpsystems/support/wiki/KnowledgeBase/Imaging/GeneralHelp/Projects");
+                System.Diagnostics.Process.Start("http://dpsystems/support/wiki/KnowledgeBase/Imaging/ProjectsAndPriorities/Project_Instructions");
             else if (sender == shiftReplacementLinkLbl)
                 System.Diagnostics.Process.Start("http://intranet/teams/dp/imaging/Lists/Shift%20Replacement/Open.aspx");
             else if (sender == scanShareLinkLbl)

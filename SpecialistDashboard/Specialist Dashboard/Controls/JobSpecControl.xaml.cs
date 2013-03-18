@@ -192,7 +192,7 @@ namespace Specialist_Dashboard
         private void LinkLbl_MouseLeftButtonUp_1(object sender, MouseButtonEventArgs e)
         {
             if (sender == projectChangesLinkLbl)
-                System.Diagnostics.Process.Start("http://dpsystems/support/wiki/KnowledgeBase/Imaging/GeneralHelp/Project%20Production%20Changes");
+                System.Diagnostics.Process.Start("http://dpsystems/support/wiki/KnowledgeBase/Imaging/ProjectsAndPriorities/Project_Production_Changes");
             else if (sender == qeTrainingLinkLbl)
                 System.Diagnostics.Process.Start(@"\\dpfs01\dpsfiler\Imaging\Production_Team\Team_Lead\Reed\Training\QE\QE_Training.pptx");
             else if (sender == projectDefectsLinkLbl)
