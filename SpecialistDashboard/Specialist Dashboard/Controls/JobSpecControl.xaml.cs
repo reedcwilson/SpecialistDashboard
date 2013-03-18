@@ -149,7 +149,9 @@ namespace Specialist_Dashboard
             autoCropTS.IsEnabled = enabled && validAuditor;
             aggFactorTS.IsEnabled = enabled && validAuditor;
             cropPaddingTxt.IsEnabled = enabled && validAuditor;
+            cropPaddingLbl.IsEnabled = enabled && validAuditor;
             deskewComboBox.IsEnabled = enabled && validAuditor;
+            deskewAngleLbl.IsEnabled = enabled && validAuditor;
             projectSpecBtn.IsEnabled = enabled && validSupervisor;
             JobSpecBtn.IsEnabled = enabled && validAuditor;
             allJobSpecsBtn.IsEnabled = enabled && validSupervisor;
@@ -243,7 +245,8 @@ namespace Specialist_Dashboard
 
         private void JobSpecBtn_Click_1(object sender, RoutedEventArgs e)
         {
-            JSUpdates.CropPadding = Convert.ToInt32(cropPaddingTxt.Text);
+            if (JSUpdates.AutoCropExists)
+                JSUpdates.CropPadding = Convert.ToInt32(cropPaddingTxt.Text);
             JSUpdates.DeskewMaxAngle = Convert.ToInt32(deskewComboBox.Text) * 100;
         }
 
@@ -420,10 +423,15 @@ namespace Specialist_Dashboard
             foreach (var file in Directory.GetFiles(jobSpecDirectory))
             {
                 AllJSUpdates.Initialize(MyBasicRoll.ProjectId, System.IO.Path.GetFileName(file));
-                AllJSUpdates.AutoCrop = Convert.ToBoolean(autoCropTS.IsChecked);
-                AllJSUpdates.AggressiveFactor = Convert.ToBoolean(aggFactorTS.IsChecked);
+
+                if (JSUpdates.AutoCropExists)
+                {
+                    AllJSUpdates.AutoCrop = Convert.ToBoolean(autoCropTS.IsChecked);
+                    AllJSUpdates.AggressiveFactor = Convert.ToBoolean(aggFactorTS.IsChecked);
+                    AllJSUpdates.CropPadding = Convert.ToInt32(cropPaddingTxt.Text);
+                }
+
                 AllJSUpdates.DeskewMaxAngle = Convert.ToInt32(deskewComboBox.Text) * 100;
-                AllJSUpdates.CropPadding = Convert.ToInt32(cropPaddingTxt.Text);
             }
         }
 
@@ -434,10 +442,15 @@ namespace Specialist_Dashboard
             var fileName = System.IO.Path.GetDirectoryName(MyRollPaths.GetJobSpec()) + @"\ProjectSpecs\" + MyBasicRoll.ProjectId + @".xml";
             //this.ProjectSpecUpdates.Initialize(MyBasicRoll.ProjectId, System.IO.Path.GetFileName(ProjectSpecUpdates.JobSpecPath));
             this.ProjectSpecUpdates.Initialize(fileName);
-            this.ProjectSpecUpdates.AutoCrop = Convert.ToBoolean(autoCropTS.IsChecked);
-            this.ProjectSpecUpdates.AggressiveFactor = Convert.ToBoolean(aggFactorTS.IsChecked);
+
+            if (JSUpdates.AutoCropExists)
+            {
+                this.ProjectSpecUpdates.AutoCrop = Convert.ToBoolean(autoCropTS.IsChecked);
+                this.ProjectSpecUpdates.AggressiveFactor = Convert.ToBoolean(aggFactorTS.IsChecked);
+                this.ProjectSpecUpdates.CropPadding = Convert.ToInt32(cropPaddingTxt.Text);
+            }
+
             this.ProjectSpecUpdates.DeskewMaxAngle = Convert.ToInt32(deskewComboBox.Text) * 100;
-            this.ProjectSpecUpdates.CropPadding = Convert.ToInt32(cropPaddingTxt.Text);
         }
 
         #region historyLv sort

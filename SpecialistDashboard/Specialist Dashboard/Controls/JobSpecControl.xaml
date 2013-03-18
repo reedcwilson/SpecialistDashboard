@@ -151,8 +151,8 @@
                     <Label x:Name="defectLogLinkLbl" Content="Defect Log" HorizontalAlignment="Left" Margin="399,122,0,0" VerticalAlignment="Top" TextElement.Foreground="DarkSlateGray" MouseEnter="LinkLbl_MouseEnter" MouseLeave="LinkLbl_MouseLeave_1" MouseLeftButtonUp="LinkLbl_MouseLeftButtonUp_1"/>
                     <TextBox x:Name="cropPaddingTxt" Controls:TextboxHelper.ClearTextButton="True" HorizontalAlignment="Left" Height="23" Margin="98,119,0,0" TextAlignment="Left" TextElement.Foreground="DimGray" VerticalAlignment="Top" Width="118" GotMouseCapture ="HighlightText_GotMouseCapture" GotKeyboardFocus="HighlightText_GotKeyboardFocus" LostFocus="TextBox_LostFocus_1" TabIndex="5"/>
                     <Button x:Name="JobSpecBtn" Content="Job Spec" Margin="239,122,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="118" Click="JobSpecBtn_Click_1" />
-                    <Label HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Content="Crop Padding"/>
-                    <Label HorizontalAlignment="Left" Margin="10,146,0,0" VerticalAlignment="Top" Content="Deskew Angle"/>
+                    <Label Name="cropPaddingLbl" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" TextElement.Foreground="DimGray" Content="Crop Padding"/>
+                    <Label Name="deskewAngleLbl" HorizontalAlignment="Left" Margin="10,146,0,0" VerticalAlignment="Top" TextElement.Foreground="DimGray" Content="Deskew Angle"/>
                 </Grid>
             </TabItem>
         </TabControl>
