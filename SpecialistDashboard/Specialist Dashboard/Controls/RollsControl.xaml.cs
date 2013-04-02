@@ -231,6 +231,12 @@ namespace Specialist_Dashboard.Controls
                 rollRollnameTxt.Text = _rollname;
                 fromDTPick.SelectedDate = _min;
                 toDTPick.SelectedDate = _max;
+
+                if (_min == Convert.ToDateTime("1/1/0001"))
+                    fromDTPick.Text = "";
+
+                if (_max == Convert.ToDateTime("1/1/0001"))
+                    toDTPick.Text = "";
             }
             // Clears search
             else if (Keyboard.IsKeyDown(Key.LeftAlt) && Keyboard.IsKeyDown(Key.C))
@@ -239,6 +245,8 @@ namespace Specialist_Dashboard.Controls
                 rollRollnameTxt.Text = "";
                 fromDTPick.SelectedDate = null;
                 toDTPick.SelectedDate = null;
+                fromDTPick.Text = "";
+                toDTPick.Text = "";
             }
         }
     }
