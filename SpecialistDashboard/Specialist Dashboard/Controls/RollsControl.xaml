@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              mc:Ignorable="d" 
-             d:DesignHeight="260" d:DesignWidth="553">
+             d:DesignHeight="260" d:DesignWidth="553"
+             KeyDown="RollsControl_KeyDown_1">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -20,8 +21,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Background="WhiteSmoke">
-        <DatePicker x:Name="fromDTPick" HorizontalAlignment="Right" Margin="0,5,130,0" VerticalAlignment="Top" TabIndex="2" IsTabStop="True"/>
-        <DatePicker x:Name="toDTPick" HorizontalAlignment="Right" Margin="0,5,23,0" VerticalAlignment="Top" IsTabStop="True" TabIndex="3"/>
+        <DatePicker x:Name="fromDTPick" HorizontalAlignment="Right" Margin="0,5,130,0" VerticalAlignment="Top" TabIndex="3" IsTabStop="True"/>
+        <DatePicker x:Name="toDTPick" HorizontalAlignment="Right" Margin="0,5,23,0" VerticalAlignment="Top" IsTabStop="True" TabIndex="4"/>
         <ListView x:Name="rollsLv" HorizontalAlignment="Stretch" Margin="5,41,10,5" VerticalAlignment="Stretch" MouseDoubleClick="rollsLv_MouseDoubleClick_1" GridViewColumnHeader.Click="GridViewColumn_Click_1" >
             <ListView.View>
                 <GridView>
@@ -36,8 +37,8 @@
             </ListView.View>
         </ListView>
         <TextBlock Name="emptyTxtBlck" Text="No Results" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,67,0,0"/>
-        <TextBox x:Name="rollRollnameTxt" HorizontalAlignment="Right" Height="23" Margin="0,5,237,0" Controls:TextboxHelper.Watermark="Rollname" Controls:TextboxHelper.ClearTextButton="True" VerticalAlignment="Top" Width="170" RenderTransformOrigin="0.578,2.346" TextElement.Foreground="DimGray" TextAlignment="Left" TabIndex="1"/>
-        <ComboBox x:Name="rollStepComboBox" HorizontalAlignment="Right" Margin="0,5,412,0" VerticalAlignment="Top" Width="126" TabIndex="2" IsEditable="True" Height="23" Controls:TextboxHelper.Watermark="Step" TextElement.Foreground="DimGray">
+        <TextBox x:Name="rollRollnameTxt" HorizontalAlignment="Right" Height="23" Margin="0,5,237,0" Controls:TextboxHelper.Watermark="Rollname" Controls:TextboxHelper.ClearTextButton="True" VerticalAlignment="Top" Width="170" RenderTransformOrigin="0.578,2.346" TextElement.Foreground="DimGray" TextAlignment="Left" TabIndex="2"/>
+        <ComboBox x:Name="rollStepComboBox" HorizontalAlignment="Right" Margin="0,5,412,0" VerticalAlignment="Top" Width="126" TabIndex="1" IsEditable="True" Height="23" Controls:TextboxHelper.Watermark="Step" TextElement.Foreground="DimGray">
             <ListBoxItem Content="Scan" TextElement.Foreground="DimGray"/>
             <ListBoxItem Content="MekelFraming" TextElement.Foreground="DimGray"/>
             <ListBoxItem Content="ImageQA" TextElement.Foreground="DimGray"/>

@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              mc:Ignorable="d" 
-             d:DesignHeight="260" d:DesignWidth="553">
+             d:DesignHeight="260" d:DesignWidth="553"
+             KeyDown="QueuesControl_KeyDown_1">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -34,7 +35,7 @@
         </ListView>
         <TextBlock Name="emptyTxtBlck" Text="No Results" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15, 85"/>
         <TextBox x:Name="queueRollTxt" Controls:TextboxHelper.ClearTextButton="True" Controls:TextboxHelper.Watermark="Rollname" HorizontalAlignment="Right" Height="23" Margin="0,33,18,0" TextAlignment="Left" TextElement.Foreground="DimGray" VerticalAlignment="Top" Width="190" TabIndex="6"/>
-        <TextBox x:Name="queueProjectTxt" Controls:TextboxHelper.ClearTextButton="True" Controls:TextboxHelper.Watermark="Project" HorizontalAlignment="Right" Height="23" Margin="0,5,18,0" TextAlignment="Left" TextElement.Foreground="DimGray" VerticalAlignment="Top" Width="190" TabIndex="5"/>
+        <TextBox x:Name="queueProjectTxt" Controls:TextboxHelper.ClearTextButton="True" Controls:TextboxHelper.Watermark="Project" HorizontalAlignment="Right" Height="23" Margin="0,5,18,0" TextAlignment="Left" TextElement.Foreground="DimGray" VerticalAlignment="Top" Width="190" TabIndex="3"/>
         <Controls:TransitioningContentControl x:Name="transitioning" Width="85" Height="40" Transition="LeftReplaceTransition" Margin="29,126,421,97"></Controls:TransitioningContentControl>
         <ComboBox x:Name="priorityComboBox" Controls:TextboxHelper.Watermark="Priority" Margin="0,5,380,0" VerticalAlignment="Top" Width="160" HorizontalAlignment="Right" TabIndex="1" IsEditable="True" Height="23" TextElement.Foreground="DimGray">
             <ComboBoxItem Content="1" TextElement.Foreground="DimGray"/>
@@ -64,9 +65,9 @@
             <ListBoxItem Content="GridlineQualityAudit" TextElement.Foreground="DimGray"/>
             <ListBoxItem Content="Incomplete" TextElement.Foreground="DimGray"/>
         </ComboBox>
-        <ComboBox x:Name="userComboBox" Controls:TextboxHelper.Watermark="User" Margin="0,33,380,0" VerticalAlignment="Top" Width="160" HorizontalAlignment="Right" TabIndex="3" IsEditable="True" Height="23" ItemsSource="{Binding SpecialistName}" TextElement.Foreground="DimGray">
+        <ComboBox x:Name="userComboBox" Controls:TextboxHelper.Watermark="User" Margin="0,33,380,0" VerticalAlignment="Top" Width="160" HorizontalAlignment="Right" TabIndex="4" IsEditable="True" Height="23" ItemsSource="{Binding SpecialistName}" TextElement.Foreground="DimGray">
         </ComboBox>
-        <ComboBox x:Name="stateComboBox" Controls:TextboxHelper.Watermark="State" HorizontalAlignment="Right" Margin="0,33,213,0" VerticalAlignment="Top" Width="162" TabIndex="4" IsEditable="True" Height="23" TextElement.Foreground="DimGray">
+        <ComboBox x:Name="stateComboBox" Controls:TextboxHelper.Watermark="State" HorizontalAlignment="Right" Margin="0,33,213,0" VerticalAlignment="Top" Width="162" TabIndex="5" IsEditable="True" Height="23" TextElement.Foreground="DimGray">
             <ListBoxItem Content="InProcess" TextElement.Foreground="DimGray"/>
             <ListBoxItem Content="Ready" TextElement.Foreground="DimGray"/>
             <ListBoxItem Content="Suspended" TextElement.Foreground="DimGray"/>

@@ -43,8 +43,10 @@ namespace Specialist_Dashboard.Controls
             }
         }
 
+        bool _visibility;
         public void VisibilityChanged(bool visible)
         {
+            _visibility = visible;
             if (visible)
             {
                 rollTabCtrlCC.Visibility = Visibility.Visible;
@@ -98,6 +100,7 @@ namespace Specialist_Dashboard.Controls
             }
         }
 
+        
         private void BackBtn_Click_2(object sender, RoutedEventArgs e)
         {
             VisibilityChanged(false);
@@ -181,6 +184,62 @@ namespace Specialist_Dashboard.Controls
             rollsLv.ItemsSource = null;
             rollsLv.Items.Clear();
             rollsLv.ItemsSource = Rolls;
+        }
+
+
+        string _step = "";
+        string _rollname = "";
+        DateTime _min;
+        DateTime _max;
+        private void RollsControl_KeyDown_1(object sender, KeyEventArgs e)
+        {
+            // Minimizes the tab control
+            if (Keyboard.IsKeyDown(Key.Escape))
+            {
+                if (DetailsTabControl.SelectedItem != null && _visibility)
+                {
+                    VisibilityChanged(false);
+                }
+            }
+            // Closes your current tab
+            else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.W))
+            {
+                if (DetailsTabControl.SelectedItem != null && _visibility)
+                {
+                    DetailsTabControl.Items.Remove(DetailsTabControl.SelectedItem);
+                    VisibilityChanged(false);
+                }
+            }
+            // Reads your current search and saves it
+            else if (Keyboard.IsKeyDown(Key.LeftAlt) && Keyboard.IsKeyDown(Key.R))
+            {
+                _step = rollStepComboBox.Text;
+                _rollname = rollRollnameTxt.Text;
+
+                _min = Convert.ToDateTime(fromDTPick.SelectedDate);
+                _max = Convert.ToDateTime(toDTPick.SelectedDate);
+
+                if (_min == null)
+                    _min = System.DateTime.Today;
+                if (_max == null)
+                    _max = System.DateTime.Now;
+            }
+            // Writes your remembered search
+            else if (Keyboard.IsKeyDown(Key.LeftAlt) && Keyboard.IsKeyDown(Key.W))
+            {
+                rollStepComboBox.Text = _step;
+                rollRollnameTxt.Text = _rollname;
+                fromDTPick.SelectedDate = _min;
+                toDTPick.SelectedDate = _max;
+            }
+            // Clears search
+            else if (Keyboard.IsKeyDown(Key.LeftAlt) && Keyboard.IsKeyDown(Key.C))
+            {
+                rollStepComboBox.Text = "";
+                rollRollnameTxt.Text = "";
+                fromDTPick.SelectedDate = null;
+                toDTPick.SelectedDate = null;
+            }
         }
     }
 }

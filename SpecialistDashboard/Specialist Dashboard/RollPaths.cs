@@ -130,7 +130,7 @@ namespace Specialist_Dashboard
                         var compressionOutputElements = RootElement.Element("Roll").Element("ImageConversion").Element("Compression").Elements("CompressionOutput");
                         foreach (var element in compressionOutputElements)
                         {
-                            if (element.Attribute("TypeCodeID").Value.ToLower() == "j2k_1")
+                            if (element.Attribute("TypeCodeID").Value.ToLower() == "j2k_1" || element.Attribute("TypeCodeID").Value.ToLower() == "tif_bitonal")
                             {
                                 idxPath = element.Attribute("OutputFolder").Value;
                                 return idxPath;

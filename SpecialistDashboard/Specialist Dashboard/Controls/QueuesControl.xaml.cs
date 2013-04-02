@@ -60,8 +60,10 @@ namespace Specialist_Dashboard
             }
         }
 
+        bool _visibility;
         public void VisibilityChanged(bool visible)
         {
+            _visibility = visible;
             if (visible)
             {
                 rollTabCtrlCC.Visibility = Visibility.Visible;
@@ -122,6 +124,7 @@ namespace Specialist_Dashboard
 
         private void ShowDetailsBtn_Click_1(object sender, RoutedEventArgs e)
         {
+            _visibility = true;
             VisibilityChanged(true);
         }
 
@@ -211,6 +214,64 @@ namespace Specialist_Dashboard
             queuesLv.ItemsSource = null;
             queuesLv.Items.Clear();
             queuesLv.ItemsSource = QueuesRolls;
+        }
+
+
+        string _priority = "";
+        string _step = "";
+        string _project = "";
+        string _user = "";
+        string _state = "";
+        string _rollname = "";
+        private void QueuesControl_KeyDown_1(object sender, KeyEventArgs e)
+        {
+                // Minimizes the tab control
+            if (Keyboard.IsKeyDown(Key.Escape))
+            {
+                if (DetailsTabControl.SelectedItem != null && _visibility)
+                {
+                    VisibilityChanged(false);
+                }
+            }
+                // Closes your current tab
+            else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.W))
+            {
+                if (DetailsTabControl.SelectedItem != null && _visibility)
+                {
+                    DetailsTabControl.Items.Remove(DetailsTabControl.SelectedItem);
+                    VisibilityChanged(false);
+                }
+            }
+                // Reads your current search and saves it
+            else if (Keyboard.IsKeyDown(Key.LeftAlt) && Keyboard.IsKeyDown(Key.R))
+            {
+                _priority = priorityComboBox.Text;
+                _step = stepComboBox.Text;
+                _project = queueProjectTxt.Text;
+                _user = userComboBox.Text;
+                _state = stateComboBox.Text;
+                _rollname = queueRollTxt.Text;
+            }
+                // Writes your remembered search
+            else if (Keyboard.IsKeyDown(Key.LeftAlt) && Keyboard.IsKeyDown(Key.W))
+            {
+                priorityComboBox.Text = _priority;
+                stepComboBox.Text = _step;
+                queueProjectTxt.Text = _project;
+                userComboBox.Text = _user;
+                stateComboBox.Text = _state;
+                queueRollTxt.Text = _rollname;
+            }
+                // Clears search
+            else if (Keyboard.IsKeyDown(Key.LeftAlt) && Keyboard.IsKeyDown(Key.C))
+            {
+                priorityComboBox.Text = "";
+                stepComboBox.Text = "";
+                queueProjectTxt.Text = "";
+                userComboBox.Text = "";
+                stateComboBox.Text = "";
+                queueRollTxt.Text = "";
+            }
         }
     }
 }
