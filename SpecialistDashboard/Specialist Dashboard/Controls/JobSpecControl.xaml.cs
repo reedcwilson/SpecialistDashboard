@@ -145,6 +145,9 @@ namespace Specialist_Dashboard
             this.BackgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
 
             this.BackgroundWorker.RunWorkerAsync();
+
+            BitmapImage img = new BitmapImage(new Uri("/images/blue-check-mark.png", UriKind.Relative));
+            CheckImg.Source = img;
         }
 
         private void QETabEnabler(bool enabled)
@@ -253,6 +256,9 @@ namespace Specialist_Dashboard
             if (JSUpdates.AutoCropExists)
                 JSUpdates.CropPadding = Convert.ToInt32(cropPaddingTxt.Text);
             JSUpdates.DeskewMaxAngle = Convert.ToInt32(deskewComboBox.Text) * 100;
+
+            BitmapImage img = new BitmapImage(new Uri("/images/blue-check-mark.png", UriKind.Relative));
+            CheckImg.Source = img;
         }
 
         private void historyLv_Selected_1(object sender, RoutedEventArgs e)
@@ -763,6 +769,18 @@ namespace Specialist_Dashboard
 
                 Clipboard.SetText(date + "\t\t" + username +"\t\t\t" + pOrF);
             }
+        }
+
+        private void cropPaddingTxt_TextChanged_1(object sender, TextChangedEventArgs e)
+        {
+            BitmapImage img = new BitmapImage(new Uri("/images/x2.png", UriKind.Relative));
+            CheckImg.Source = img;
+        }
+
+        private void deskewComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            BitmapImage img = new BitmapImage(new Uri("/images/x2.png", UriKind.Relative));
+            CheckImg.Source = img;
         }
 
     }

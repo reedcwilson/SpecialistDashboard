@@ -127,7 +127,7 @@
                     </TextBlock>
                     <Controls:ToggleSwitch x:Name="aggFactorTS" Header="Aggressive Factor" VerticalAlignment="Top" HorizontalAlignment="Left" Width="156" Height="60" Margin="0,55,0,0" Click="aggFactorTS_Click_1"/>
                     <Controls:ToggleSwitch x:Name="autoCropTS" Header="Auto Crop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="156" Height="60" Click="autoCropTS_Click_1" Margin="0,-5,0,0"/>
-                    <ComboBox x:Name="deskewComboBox" Margin="98,147,0,0" VerticalAlignment="Top" Width="118" HorizontalAlignment="Left" IsEditable="True" Height="23" TextElement.Foreground="DimGray">
+                    <ComboBox x:Name="deskewComboBox" Margin="98,147,0,0" VerticalAlignment="Top" Width="118" HorizontalAlignment="Left" IsEditable="True" Height="23" TextElement.Foreground="DimGray" SelectionChanged="deskewComboBox_SelectionChanged_1" >
                         <ComboBoxItem Content="1" TextElement.Foreground="DimGray"/>
                         <ComboBoxItem Content="2" TextElement.Foreground="DimGray"/>
                         <ComboBoxItem Content="3" TextElement.Foreground="DimGray"/>
@@ -149,10 +149,11 @@
                     <Label x:Name="qeTrainingLinkLbl" Content="QE Training" HorizontalAlignment="Left" Margin="399,72,0,0" VerticalAlignment="Top" TextElement.Foreground="DarkSlateGray" MouseEnter="LinkLbl_MouseEnter" MouseLeave="LinkLbl_MouseLeave_1" MouseLeftButtonUp="LinkLbl_MouseLeftButtonUp_1" />
                     <Label x:Name="projectDefectsLinkLbl" Content="Project Defects" HorizontalAlignment="Left" Margin="399,98,0,0" VerticalAlignment="Top" TextElement.Foreground="DarkSlateGray" MouseEnter="LinkLbl_MouseEnter" MouseLeave="LinkLbl_MouseLeave_1" MouseLeftButtonUp="LinkLbl_MouseLeftButtonUp_1"/>
                     <Label x:Name="defectLogLinkLbl" Content="Defect Log" HorizontalAlignment="Left" Margin="399,122,0,0" VerticalAlignment="Top" TextElement.Foreground="DarkSlateGray" MouseEnter="LinkLbl_MouseEnter" MouseLeave="LinkLbl_MouseLeave_1" MouseLeftButtonUp="LinkLbl_MouseLeftButtonUp_1"/>
-                    <TextBox x:Name="cropPaddingTxt" Controls:TextboxHelper.ClearTextButton="True" HorizontalAlignment="Left" Height="23" Margin="98,119,0,0" TextAlignment="Left" TextElement.Foreground="DimGray" VerticalAlignment="Top" Width="118" GotMouseCapture ="HighlightText_GotMouseCapture" GotKeyboardFocus="HighlightText_GotKeyboardFocus" LostFocus="TextBox_LostFocus_1" TabIndex="5"/>
+                    <TextBox x:Name="cropPaddingTxt" Controls:TextboxHelper.ClearTextButton="True" HorizontalAlignment="Left" Height="23" Margin="98,119,0,0" TextAlignment="Left" TextElement.Foreground="DimGray" VerticalAlignment="Top" Width="118" GotMouseCapture ="HighlightText_GotMouseCapture" GotKeyboardFocus="HighlightText_GotKeyboardFocus" LostFocus="TextBox_LostFocus_1" TabIndex="5" TextChanged="cropPaddingTxt_TextChanged_1" />
                     <Button x:Name="JobSpecBtn" Content="Job Spec" Margin="239,122,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="118" Click="JobSpecBtn_Click_1" />
                     <Label Name="cropPaddingLbl" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" TextElement.Foreground="DimGray" Content="Crop Padding"/>
                     <Label Name="deskewAngleLbl" HorizontalAlignment="Left" Margin="10,146,0,0" VerticalAlignment="Top" TextElement.Foreground="DimGray" Content="Deskew Angle"/>
+                    <Image Name="CheckImg" HorizontalAlignment="Left" Height="25" Margin="359,128,0,0" VerticalAlignment="Top" Width="26" Source="/Specialist Dashboard;component/images/blue-check-mark.png"/>
                 </Grid>
             </TabItem>
         </TabControl>
