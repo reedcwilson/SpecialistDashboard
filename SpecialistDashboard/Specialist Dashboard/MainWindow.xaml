@@ -34,7 +34,7 @@
             <TabControl Name="tabControl" DockPanel.Dock="Top" HorizontalAlignment="Stretch" Margin="0, 0, 0, 0" SelectionChanged="tabControl_SelectionChanged_1" >
                 <TabItem Header="Rolls" Name="rollsTab">
                     <Grid>
-                        <Canvas/>
+                        <Canvas Margin="10,0,-10,0"/>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Numbers">
@@ -134,7 +134,9 @@
                 </TabItem>-->
             </TabControl>
         </DockPanel>
-        <ToggleButton x:Name="rollsToggleBtn" HorizontalAlignment="Right" VerticalAlignment="Top" Width="23" Height="13" Click="rollsToggleBtn_Click_1" Margin="0,15,15,0" />
+        <ToggleButton x:Name="rollsToggleBtn" HorizontalAlignment="Right" VerticalAlignment="Top" Width="23" Height="13" Click="rollsToggleBtn_Click_1" Margin="0,15,15,0">
+            <Image Name="ToggleBtnImg" Source="/images/General-query.png" />
+        </ToggleButton>
         <Controls:ProgressRing Name="LoadingProgressRing" IsActive="False" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="242,168,237,92" />
         <Controls:ProgressRing Name="NumbersLoadingProgressRing" IsActive="False" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="242,168,237,92" />
         <Controls:ProgressRing Name="InfoLoadingProgressRing" IsActive="False" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="242,168,237,92" />

@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Windows.Media.Imaging;
 
 namespace Specialist_Dashboard
 {
@@ -542,11 +543,16 @@ namespace Specialist_Dashboard
             if (rollsToggleBtn.IsChecked == false)
             {
                 rollsTab.Content = RollsTabQueuesControl;
+
+                BitmapImage img = new BitmapImage(new Uri("/images/General-query.png", UriKind.Relative));
+                ToggleBtnImg.Source = img;
             }
             else if (rollsToggleBtn.IsChecked == true)
             {
-
                 rollsTab.Content = RollsTabRollsControl;
+
+                BitmapImage img = new BitmapImage(new Uri("/images/Personal-query.png", UriKind.Relative));
+                ToggleBtnImg.Source = img;
             }
         }
 
