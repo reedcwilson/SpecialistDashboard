@@ -165,6 +165,12 @@ namespace Specialist_Dashboard
             allJobSpecsBtn.IsEnabled = enabled && validSupervisor;
             JobSpecOpenHLink.IsEnabled = enabled;
 
+            if (JSUpdates.DeskewMaxAngle == 0)
+            {
+                deskewComboBox.IsEnabled = false;
+                deskewAngleLbl.IsEnabled = false;
+            }
+
             qeTrainingLinkLbl.IsEnabled = validAuditor;
             projectDefectsLinkLbl.IsEnabled = validAuditor;
             defectLogLinkLbl.IsEnabled = validAuditor;
@@ -255,7 +261,8 @@ namespace Specialist_Dashboard
         {
             if (JSUpdates.AutoCropExists)
                 JSUpdates.CropPadding = Convert.ToInt32(cropPaddingTxt.Text);
-            JSUpdates.DeskewMaxAngle = Convert.ToInt32(deskewComboBox.Text) * 100;
+            if (JSUpdates.DeskewMaxAngle != 0)
+                JSUpdates.DeskewMaxAngle = Convert.ToInt32(deskewComboBox.Text) * 100;
 
             BitmapImage img = new BitmapImage(new Uri("/images/blue-check-mark.png", UriKind.Relative));
             CheckImg.Source = img;
